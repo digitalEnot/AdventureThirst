@@ -14,6 +14,18 @@ class SignUpVC: UIViewController {
     private let passwordTextField = ATTextField(placeholder: "Пароль")
     private let secondPasswordTextField = ATTextField(placeholder: "Повторите пароль")
     private let signUpButton = UIButton()
+    
+    private let isModal: Bool
+    
+    init(isModal: Bool) {
+        self.isModal = isModal
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -105,18 +117,20 @@ class SignUpVC: UIViewController {
         Task {
             do {
                 // TODO:
-                let _ = try await AuthenticationManager.shared.registerNewUserWithEmail(email: emailTextField.text!, password: passwordTextField.text!)
+                let user = try await AuthenticationManager.shared.registerNewUserWithEmail(email: emailTextField.text!, password: passwordTextField.text!)
+                
+                let appUser = AppUser(uid: user.uid, email: user.email)
+                navigationController?.pushViewController(PersonalInfoVC(appUser: appUser, isModal: isModal), animated: true)
             } catch {
                 print(error)
             }
         }
-        self.dismiss(animated: true)
     }
 }
 
 
 #Preview() {
-    SignUpVC()
+    SignUpVC(isModal: false)
 }
 
 extension SignUpVC: UITextFieldDelegate {

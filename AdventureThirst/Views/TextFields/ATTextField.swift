@@ -16,6 +16,14 @@ class ATTextField: UITextField {
         configure(placeholder: placeholder)
     }
     
+    convenience init(placeholder: String, background: UIColor, border: UIColor) {
+        self.init(placeholder: placeholder)
+        layer.borderColor = border.cgColor
+        layer.backgroundColor = background.cgColor
+        attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [NSAttributedString.Key.foregroundColor: border])
+
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -47,14 +55,12 @@ class ATTextField: UITextField {
         clearButtonMode = .whileEditing
         
         attributedPlaceholder = NSAttributedString(string: placeholder)
-        font = .boldSystemFont(ofSize: 18)
-    }
-    
-    func setColor(background: UIColor, border: UIColor) {
-        layer.borderColor = border.cgColor
-        layer.backgroundColor = background.cgColor
-        tintColor = border
+        font = .boldSystemFont(ofSize: 15)
     }
 }
 
+
+#Preview() {
+    PersonalInfoVC(appUser: AppUser(uid: "", email: ""), isModal: false)
+}
 

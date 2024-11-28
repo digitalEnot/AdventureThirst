@@ -13,6 +13,17 @@ final class SignUpOrLogInVC: UIViewController {
     private let signUpButton = UIButton()
     private let logo = UIImageView()
     
+    private let isModal: Bool
+    
+    init(isModal: Bool) {
+        self.isModal = isModal
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -90,11 +101,11 @@ final class SignUpOrLogInVC: UIViewController {
     }
 
     @objc func logInButtonTapped() {
-        navigationController?.pushViewController(LogInVC(), animated: true)
+        navigationController?.pushViewController(LogInVC(isModal: isModal), animated: true)
     }
     
     @objc func SignUpButtonTapped() {
-        navigationController?.pushViewController(SignUpVC(), animated: true)
+        navigationController?.pushViewController(SignUpVC(isModal: isModal), animated: true)
     }
 
 }

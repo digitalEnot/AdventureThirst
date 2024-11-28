@@ -13,6 +13,18 @@ class LogInVC: UIViewController {
     private let emailTextField = ATTextField(placeholder: "Email")
     private let passwordTextField = ATTextField(placeholder: "Пароль")
     private let signUpButton = UIButton()
+    
+    private let isModal: Bool
+    
+    init(isModal: Bool) {
+        self.isModal = isModal
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -93,12 +105,16 @@ class LogInVC: UIViewController {
         Task {
             do {
                 // TODO:
-                let _ = try await AuthenticationManager.shared.signInWithEmail(email: emailTextField.text!, password: passwordTextField.text!)
+                let user = try await AuthenticationManager.shared.signInWithEmail(email: emailTextField.text!, password: passwordTextField.text!)
+                if isModal {
+                    self.dismiss(animated: true)
+                } else {
+                    navigationController?.pushViewController(ATTabBarController(user: AppUser(uid: user.uid, email: user.email)), animated: true)
+                }
             } catch {
                 print(error)
             }
         }
-        self.dismiss(animated: true)
     }
 }
 
@@ -109,5 +125,5 @@ extension LogInVC: UITextFieldDelegate {
 }
 
 #Preview() {
-    LogInVC()
+    LogInVC(isModal: false)
 }

@@ -17,8 +17,24 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        window?.rootViewController = ATTabBarController()
+        
+        Task {
+            let authUser = try? await AuthenticationManager.shared.getCurrentSession()
+            let auth = SignUpOrLogInVC(isModal: false)
+            if let authUser {
+                let navCont = UINavigationController(rootViewController: auth)
+                navCont.pushViewController(ATTabBarController(user: AppUser(uid: authUser.uid, email: authUser.email)), animated: false)
+                window?.rootViewController = navCont
+                return
+            } else {
+                window?.rootViewController = UINavigationController(rootViewController: auth)
+            }
+        }
+        
         window?.makeKeyAndVisible()
+        
+        
+        
     }
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.

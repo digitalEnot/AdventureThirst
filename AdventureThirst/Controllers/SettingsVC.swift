@@ -92,6 +92,7 @@ extension SettingsVC: UITableViewDelegate, UITableViewDataSource {
             cell.setCell(text: "Выйти из аккаунта", image: nil, textColor: .red, hasArrow: false)
         }
         
+        
         return cell
     }
     
@@ -100,7 +101,7 @@ extension SettingsVC: UITableViewDelegate, UITableViewDataSource {
             Task {
                 do {
                     try await AuthenticationManager.shared.signOut()
-                    let destVC = SignUpOrLogInVC()
+                    let destVC = SignUpOrLogInVC(isModal: true)
                     let navController = UINavigationController(rootViewController: destVC)
                     navController.modalPresentationStyle = .popover
                     navController.isModalInPresentation = true
@@ -110,6 +111,13 @@ extension SettingsVC: UITableViewDelegate, UITableViewDataSource {
                 }
             }
         }
+        
+        if indexPath.section == 0 {
+            navigationController?.pushViewController(SignUpVC(isModal: false), animated: true)
+        }
+        
+        tableView.deselectRow(at: indexPath, animated: true)
+        
     }
     
     

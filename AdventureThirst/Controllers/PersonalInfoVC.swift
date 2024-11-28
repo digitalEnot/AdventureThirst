@@ -9,24 +9,68 @@ import UIKit
 
 class PersonalInfoVC: UIViewController {
     
+    let spinner = SpinnerViewController()
+    let viewForSpinner = UIView()
+    let appUser: AppUser
+    
+    private let photoView = UIImageView()
+    private let imagePicker = ImagePicker()
+    private let imagePickerButton = UIButton(type: .system)
+    
     private let titleText = UILabel()
-    private let nameTextField = ATTextField(placeholder: "Имя")
-    private let lastnameTextField = ATTextField(placeholder: "Фамилия")
-    private let middlenamePasswordTextField = ATTextField(placeholder: "Отчестсво (Необязательно)")
+    private let nameTextField = ATTextField(placeholder: "Имя", background: UIColor(hex: "#8abdedFF")!, border: UIColor(hex: "#1c88edFF")!)
+    private let lastnameTextField = ATTextField(placeholder: "Фамилия", background: UIColor(hex: "#8abdedFF")!, border: UIColor(hex: "#1c88edFF")!)
+    private let middlenamePasswordTextField = ATTextField(placeholder: "Отчестсво (Необязательно)", background: UIColor(hex: "#8abdedFF")!, border: UIColor(hex: "#1c88edFF")!)
+    
     private let signUpButton = UIButton()
-
+    private let birthdayDatePicker = UIDatePicker()
+    
+    
+    private let isModal: Bool
+    
+    init(appUser: AppUser, isModal: Bool) {
+        self.isModal = isModal
+        self.appUser = appUser
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         configure()
         configureConstraints()
+        addSpinner()
+    }
+    
+    func addSpinner() {
+        view.addSubview(viewForSpinner)
+        addChild(spinner)
+        viewForSpinner.addSubview(spinner.view)
+        spinner.didMove(toParent: self)
+        viewForSpinner.translatesAutoresizingMaskIntoConstraints = false
         
-        nameTextField.setColor(background: UIColor(hex: "#8abdedFF")!, border: UIColor(hex: "#1c88edFF")!)
-        lastnameTextField.setColor(background: UIColor(hex: "#8abdedFF")!, border: UIColor(hex: "#1c88edFF")!)
-        middlenamePasswordTextField.setColor(background: UIColor(hex: "#8abdedFF")!, border: UIColor(hex: "#1c88edFF")!)
+        NSLayoutConstraint.activate([
+            viewForSpinner.centerXAnchor.constraint(equalTo: photoView.centerXAnchor),
+            viewForSpinner.centerYAnchor.constraint(equalTo: photoView.centerYAnchor),
+        ])
     }
     
     private func configure() {
+        view.addSubview(photoView)
+        photoView.translatesAutoresizingMaskIntoConstraints = false
+        photoView.layer.cornerRadius = 50
+        photoView.layer.masksToBounds = true
+        photoView.image = UIImage(named: "profile")
+        
+        view.addSubview(imagePickerButton)
+        imagePickerButton.setTitle("Выберете фотографию", for: .normal)
+        imagePickerButton.translatesAutoresizingMaskIntoConstraints = false
+        imagePickerButton.addTarget(self, action: #selector(imageTapped), for: .touchUpInside)
+        
         view.addSubview(titleText)
         titleText.translatesAutoresizingMaskIntoConstraints = false
         titleText.text = "Регистрация"
@@ -37,11 +81,9 @@ class PersonalInfoVC: UIViewController {
         
         view.addSubview(lastnameTextField)
         lastnameTextField.translatesAutoresizingMaskIntoConstraints = false
-        lastnameTextField.isSecureTextEntry = true
         
         view.addSubview(middlenamePasswordTextField)
         middlenamePasswordTextField.translatesAutoresizingMaskIntoConstraints = false
-        middlenamePasswordTextField.isSecureTextEntry = true
         
         view.addSubview(signUpButton)
         signUpButton.translatesAutoresizingMaskIntoConstraints = false
@@ -66,9 +108,29 @@ class PersonalInfoVC: UIViewController {
         middlenamePasswordTextField.delegate = self
     }
     
+    @objc func imageTapped() {
+        imagePicker.showImagePicker(in: self) { [weak self] image in
+            guard let self else { return }
+            photoView.image = nil
+            self.spinner.spinner.startAnimating()
+            Task {
+                if let photoData = image.jpegData(compressionQuality: 0.5) {
+                    print(photoData)
+                    do {
+                        try await StorageManager.shared.uploadProfilePhoto(for: self.appUser, photoData: photoData)
+                        self.photoView.image = image
+                        self.spinner.spinner.stopAnimating()
+                    } catch {
+                        print("ERROR: \(error)")
+                    }
+                }
+            }
+        }
+    }
+    
     
     private func configureStateOfTheSubmitButton() {
-        if (nameTextField.text == "" || lastnameTextField.text == "" || middlenamePasswordTextField.text == "") {
+        if (nameTextField.text == "" || lastnameTextField.text == "") {
             signUpButton.isEnabled = false
         } else {
             signUpButton.isEnabled = true
@@ -77,10 +139,19 @@ class PersonalInfoVC: UIViewController {
     
     private func configureConstraints() {
         NSLayoutConstraint.activate([
+            
             titleText.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
             titleText.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             
-            nameTextField.topAnchor.constraint(equalTo: titleText.bottomAnchor, constant: 40),
+            photoView.topAnchor.constraint(equalTo: titleText.bottomAnchor, constant: 20),
+            photoView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            photoView.heightAnchor.constraint(equalToConstant: 100),
+            photoView.widthAnchor.constraint(equalToConstant: 100),
+            
+            imagePickerButton.topAnchor.constraint(equalTo: photoView.bottomAnchor, constant: 5),
+            imagePickerButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
+            nameTextField.topAnchor.constraint(equalTo: photoView.bottomAnchor, constant: 60),
             nameTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             nameTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             nameTextField.heightAnchor.constraint(equalToConstant: 50),
@@ -103,24 +174,17 @@ class PersonalInfoVC: UIViewController {
     }
     
     @objc func buttonPressed() {
-        guard lastnameTextField.text == middlenamePasswordTextField.text else {
-            return
+        if isModal {
+            self.dismiss(animated: true)
+        } else {
+            navigationController?.pushViewController(ATTabBarController(user: appUser), animated: true)
         }
-        Task {
-            do {
-                // TODO:
-                let _ = try await AuthenticationManager.shared.registerNewUserWithEmail(email: nameTextField.text!, password: lastnameTextField.text!)
-            } catch {
-                print(error)
-            }
-        }
-        self.dismiss(animated: true)
     }
 }
 
 
 #Preview() {
-    PersonalInfoVC()
+    PersonalInfoVC(appUser: AppUser(uid: "1234", email: "123"), isModal: false)
 }
 
 extension PersonalInfoVC: UITextFieldDelegate {

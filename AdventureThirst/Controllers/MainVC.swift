@@ -9,39 +9,33 @@ import UIKit
 
 class MainVC: UIViewController {
     
-    var user: AppUser?
-
+    var user: AppUser
+    
+    init(user: AppUser) {
+        self.user = user
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        getUser()
         configure()
     }
     
-//    override func viewWillAppear(_ animated: Bool) {
-//        super.viewWillAppear(animated)
-//        getUser()
-//    }
-    
-    
     private func getUser() {
         Task {
-            let authUser = try? await AuthenticationManager.shared.getCurrentSession()
-            guard let authUser else {
-                let destVC = SignUpOrLogInVC()
-                let navController = UINavigationController(rootViewController: destVC)
-                navController.modalPresentationStyle = .popover
-                navController.isModalInPresentation = true
-                present(navController, animated: true)
-                return
-            }
+            let authUser = try await AuthenticationManager.shared.getCurrentSession()
             user = authUser
-            print(user?.uid ?? "ничего не пришло")
+            print(user.uid)
         }
     }
     
 
     private func configure() {
         view.backgroundColor = .systemBackground
-        print(user?.email ?? "error")
+        print(user.email)
     }
 }
