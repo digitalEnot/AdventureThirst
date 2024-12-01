@@ -23,7 +23,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let auth = SignUpOrLogInVC(isModal: false)
             if let authUser {
                 let navCont = UINavigationController(rootViewController: auth)
-                navCont.pushViewController(ATTabBarController(), animated: false)
+                let personalInfo = try await DatabaseManager.shared.fetchToDoItems(for: authUser.uid)
+                let photoData = try await StorageManager.shared.fetchProfilePhoto(for: authUser)
+                let userData = UserData(uid: authUser.uid, email: authUser.email ?? "", name: personalInfo[0].name, lastName: personalInfo[0].lastName, middleName: personalInfo[0].middleName, photoData: photoData)
+                navCont.pushViewController(ATTabBarController(userData: userData), animated: false)
                 window?.rootViewController = navCont
                 return
             } else {

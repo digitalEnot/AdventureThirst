@@ -104,12 +104,15 @@ class LogInVC: UIViewController {
     @objc func buttonPressed() {
         Task {
             do {
-                // TODO:
                 let user = try await AuthenticationManager.shared.signInWithEmail(email: emailTextField.text!, password: passwordTextField.text!)
+                let userPhoto = try await StorageManager.shared.fetchProfilePhoto(for: user)
+                let userPersonalInfo = try await DatabaseManager.shared.fetchToDoItems(for: user.uid)
+                let userData =  UserData(uid: userPersonalInfo[0].userUid, email: user.email ?? "", name: userPersonalInfo[0].name, lastName: userPersonalInfo[0].lastName, middleName: userPersonalInfo[0].middleName, photoData: userPhoto)
                 if isModal {
                     self.dismiss(animated: true)
+                    // ну надо сделать ебаный 
                 } else {
-                    navigationController?.pushViewController(ATTabBarController(), animated: true)
+                    navigationController?.pushViewController(ATTabBarController(userData: userData), animated: true)
                 }
             } catch {
                 print(error)

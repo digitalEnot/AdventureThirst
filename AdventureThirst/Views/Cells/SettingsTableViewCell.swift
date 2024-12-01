@@ -68,6 +68,6 @@ class SettingsTableViewCell: UITableViewCell {
 }
 
 
-#Preview() {
-    SettingsVC()
-}
+//#Preview() {
+//    SettingsVC()
+//}

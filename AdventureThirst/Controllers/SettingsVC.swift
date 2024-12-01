@@ -15,6 +15,24 @@ struct ButtonView {
 
 class SettingsVC: UIViewController {
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    init(userData: UserData) {
+        self.userData = userData
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    var userData: UserData?
+    
+    func updateSettingsHeader(userData: UserData) {
+        self.userData = userData
+        let settingsHeader = SettingsHeaderView(frame:  CGRect(x: 0, y: 0, width: view.bounds.width, height: 150))
+        settingsHeader.setData(userData: userData)
+        settingsTable.tableHeaderView = settingsHeader
+    }
+    
     let sectionTitles = ["Настройки", "История", ""]
     let buttonsInSettingsSection: [ButtonView] = [
         ButtonView(image: UIImage(systemName: "person.text.rectangle"), text: "Персональная информация", nextVC: nil),
@@ -40,7 +58,9 @@ class SettingsVC: UIViewController {
         view.backgroundColor = .systemBackground
         settingsTable.delegate = self
         settingsTable.dataSource = self
-        settingsTable.tableHeaderView = SettingsHeaderView(frame:  CGRect(x: 0, y: 0, width: view.bounds.width, height: 150))
+        let settingsHeader = SettingsHeaderView(frame:  CGRect(x: 0, y: 0, width: view.bounds.width, height: 150))
+        settingsHeader.setData(userData: userData ?? nil)
+        settingsTable.tableHeaderView = settingsHeader
     }
     
     override func viewDidLayoutSubviews() {
@@ -111,5 +131,5 @@ extension SettingsVC: UITableViewDelegate, UITableViewDataSource {
 }
 
 #Preview() {
-    SettingsVC()
+    SettingsVC(userData: UserData(uid: "1", email: "", name: "", lastName: "", middleName: "", photoData: Data()))
 }

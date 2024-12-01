@@ -8,7 +8,7 @@
 import Foundation
 import Supabase
 
-struct PersonalInfo: Codable {
+struct userData: Codable {
     let id: Int
     let createdAt: String
     let name: String
@@ -44,12 +44,12 @@ class DatabaseManager {
         print("RESPONSE: \(response)")
     }
     
-    func fetchToDoItems(for uid: String) async throws -> [PersonalInfo] {
+    func fetchToDoItems(for uid: String) async throws -> [userData] {
         let response = try await client.from("personall").select().equals("user_uid", value: uid).execute()
         let data = response.data
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let todos = try decoder.decode([PersonalInfo].self, from: data)
+        let todos = try decoder.decode([userData].self, from: data)
         return todos
     }
     

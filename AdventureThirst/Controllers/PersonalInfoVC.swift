@@ -180,15 +180,20 @@ class PersonalInfoVC: UIViewController {
                 print("1")
                 let sesseion = try await AuthenticationManager.shared.getCurrentSession()
                 try await DatabaseManager.shared.createToDoItem(item: PersonalInfoPayload(name: nameTextField.text!, lastName: lastnameTextField.text!, middleName: middlenamePasswordTextField.text ?? "", userUid: sesseion.uid))
+                
+                if isModal {
+                    self.dismiss(animated: true)
+                    //  ебаный делегат
+                } else {
+                    let photo = photoView.image
+                    let photoData = photo?.jpegData(compressionQuality: 0.5)
+                    guard let photoData = photoData else { return }
+                    
+                    navigationController?.pushViewController(ATTabBarController(userData: UserData(uid: sesseion.uid, email: sesseion.email ?? "", name: nameTextField.text!, lastName: lastnameTextField.text!, middleName: middlenamePasswordTextField.text!, photoData: photoData)), animated: true)
+                }
             } catch {
                 
             }
-        }
-        
-        if isModal {
-            self.dismiss(animated: true)
-        } else {
-            navigationController?.pushViewController(ATTabBarController(), animated: true)
         }
     }
 }

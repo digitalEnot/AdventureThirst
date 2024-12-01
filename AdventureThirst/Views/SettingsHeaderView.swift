@@ -17,27 +17,33 @@ class SettingsHeaderView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        getUserData()
+//        getUserData()
         configure()
         constraints()
     }
 
     
-    private func getUserData() {
-        Task {
-            do {
-                let session = try await AuthenticationManager.shared.getCurrentSession()
-                let userdata = try await DatabaseManager.shared.fetchToDoItems(for: session.uid)
-                print(session.uid)
-                let photoData = try await StorageManager.shared.fetchProfilePhoto(for: session)
-                
-                photoView.image = UIImage(data: photoData)
-                userName.text = userdata[0].name
-            } catch {
-                print("error when fetching userData: \(error)")
-            }
-        }
+    func setData(userData: UserData?) {
+        guard let userData else { return }
+        photoView.image = UIImage(data: userData.photoData)
+        userName.text = userData.name
     }
+    
+//    private func getUserData() {
+//        Task {
+//            do {
+//                let session = try await AuthenticationManager.shared.getCurrentSession()
+//                let userdata = try await DatabaseManager.shared.fetchToDoItems(for: session.uid)
+//                print(session.uid)
+//                let photoData = try await StorageManager.shared.fetchProfilePhoto(for: session)
+//                
+//                photoView.image = UIImage(data: photoData)
+//                userName.text = userdata[0].name
+//            } catch {
+//                print("error when fetching userData: \(error)")
+//            }
+//        }
+//    }
     
     private func configure() {
         addSubview(photoView)
@@ -72,6 +78,6 @@ class SettingsHeaderView: UIView {
 }
 
 
-#Preview() {
-    SettingsVC()
-}
+//#Preview() {
+//    SettingsVC()
+//}

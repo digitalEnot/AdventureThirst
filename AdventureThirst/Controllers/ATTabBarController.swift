@@ -9,6 +9,17 @@ import UIKit
 
 class ATTabBarController: UITabBarController {
     
+    let userData: UserData
+    
+    init(userData: UserData) {
+        self.userData = userData
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         UITabBar.appearance().tintColor = .blue
@@ -36,7 +47,7 @@ class ATTabBarController: UITabBarController {
     
     
     private func createSettingsNC() -> UINavigationController {
-        let favoritesCocktailsVC = SettingsVC()
+        let favoritesCocktailsVC = SettingsVC(userData: userData)
         favoritesCocktailsVC.title = "Настройки"
         favoritesCocktailsVC.tabBarItem = UITabBarItem(title: "Настройки", image: UIImage(systemName: "gear"), tag: 1)
         return UINavigationController(rootViewController: favoritesCocktailsVC)
