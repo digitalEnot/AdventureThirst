@@ -109,7 +109,7 @@ class LogInVC: UIViewController {
                 if isModal {
                     self.dismiss(animated: true)
                 } else {
-                    navigationController?.pushViewController(ATTabBarController(user: AppUser(uid: user.uid, email: user.email)), animated: true)
+                    navigationController?.pushViewController(ATTabBarController(), animated: true)
                 }
             } catch {
                 print(error)

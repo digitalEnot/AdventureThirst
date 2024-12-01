@@ -22,11 +22,10 @@ class SettingsVC: UIViewController {
         ButtonView(image: UIImage(systemName: "creditcard"), text: "Способ оплаты", nextVC: nil)]
     
     
-    private let homeFeedTable: UITableView = {
+    private let settingsTable: UITableView = {
         let table = UITableView(frame: .zero, style: .insetGrouped)
         table.separatorStyle = .none
         table.register(SettingsTableViewCell.self, forCellReuseIdentifier: SettingsTableViewCell.identifier)
-//        table.backgroundColor = .blue
         return table
     }()
 
@@ -37,26 +36,16 @@ class SettingsVC: UIViewController {
     
     
     private func configureTableView() {
-        view.addSubview(homeFeedTable)
+        view.addSubview(settingsTable)
         view.backgroundColor = .systemBackground
-        homeFeedTable.delegate = self
-        homeFeedTable.dataSource = self
-//        homeFeedTable.tableHeaderView =
-        
-        
-//        settingsTableView.translatesAutoresizingMaskIntoConstraints = false
-//        
-//        NSLayoutConstraint.activate([
-//            settingsTableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 10),
-//            settingsTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-//            settingsTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-//            settingsTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-//        ])
+        settingsTable.delegate = self
+        settingsTable.dataSource = self
+        settingsTable.tableHeaderView = SettingsHeaderView(frame:  CGRect(x: 0, y: 0, width: view.bounds.width, height: 150))
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        homeFeedTable.frame = view.bounds
+        settingsTable.frame = view.bounds
     }
 }
 
@@ -92,9 +81,9 @@ extension SettingsVC: UITableViewDelegate, UITableViewDataSource {
             cell.setCell(text: "Выйти из аккаунта", image: nil, textColor: .red, hasArrow: false)
         }
         
-        
         return cell
     }
+    
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 2 {
@@ -112,12 +101,7 @@ extension SettingsVC: UITableViewDelegate, UITableViewDataSource {
             }
         }
         
-        if indexPath.section == 0 {
-            navigationController?.pushViewController(SignUpVC(isModal: false), animated: true)
-        }
-        
         tableView.deselectRow(at: indexPath, animated: true)
-        
     }
     
     

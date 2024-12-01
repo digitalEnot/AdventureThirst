@@ -174,10 +174,21 @@ class PersonalInfoVC: UIViewController {
     }
     
     @objc func buttonPressed() {
+        
+        Task {
+            do {
+                print("1")
+                let sesseion = try await AuthenticationManager.shared.getCurrentSession()
+                try await DatabaseManager.shared.createToDoItem(item: PersonalInfoPayload(name: nameTextField.text!, lastName: lastnameTextField.text!, middleName: middlenamePasswordTextField.text ?? "", userUid: sesseion.uid))
+            } catch {
+                
+            }
+        }
+        
         if isModal {
             self.dismiss(animated: true)
         } else {
-            navigationController?.pushViewController(ATTabBarController(user: appUser), animated: true)
+            navigationController?.pushViewController(ATTabBarController(), animated: true)
         }
     }
 }

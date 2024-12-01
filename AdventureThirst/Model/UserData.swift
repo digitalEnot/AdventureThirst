@@ -7,10 +7,11 @@
 
 import Foundation
 
-struct ATUser: Codable {
-    let uid: String
+struct UserData: Codable {
+    let uid: Int
+    let email: String
     let name: String
     let lastName: String
     let middleName: String?
-    let photoID: String
+    let photoData: Data
 }

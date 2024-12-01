@@ -24,14 +24,14 @@ class StorageManager {
     
     func uploadProfilePhoto(for user: AppUser, photoData: Data) async throws {
         do {
-            let _ = try await storage.from("images").list(path: "\(user.uid)")
-            let result = try await storage.from("images").update("\(user.uid)/profile_photo.jpg", data: photoData, options: FileOptions(cacheControl: "2400"))
+            _ = try await storage.from("images").list(path: "\(user.uid)")
+            _ = try await storage.from("images").update("\(user.uid)/profile_photo.jpg", data: photoData, options: FileOptions(cacheControl: "2400"))
         } catch {
-            let result = try await storage.from("images").upload("\(user.uid)/profile_photo.jpg", data: photoData, options: FileOptions(cacheControl: "2400"))
+            _ = try await storage.from("images").upload("\(user.uid)/profile_photo.jpg", data: photoData, options: FileOptions(cacheControl: "2400"))
         }
     }
     
     func fetchProfilePhoto(for user: AppUser) async throws -> Data {
-        return  try await storage.from("images").download(path: "\(user.uid)/profile_photo.jpg")
+        return try await storage.from("images").download(path:"\(user.uid)/profile_photo.jpg")
     }
 }

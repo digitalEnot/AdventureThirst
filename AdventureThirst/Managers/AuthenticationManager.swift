@@ -8,11 +8,6 @@
 import Foundation
 import Supabase
 
-struct AppUser {
-    let uid: String
-    let email: String?
-}
-
 
 final class AuthenticationManager {
     static let shared = AuthenticationManager()

@@ -23,7 +23,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let auth = SignUpOrLogInVC(isModal: false)
             if let authUser {
                 let navCont = UINavigationController(rootViewController: auth)
-                navCont.pushViewController(ATTabBarController(user: AppUser(uid: authUser.uid, email: authUser.email)), animated: false)
+                navCont.pushViewController(ATTabBarController(), animated: false)
                 window?.rootViewController = navCont
                 return
             } else {
