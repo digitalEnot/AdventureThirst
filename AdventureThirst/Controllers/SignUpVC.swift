@@ -26,6 +26,8 @@ class SignUpVC: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    weak var delagate: SettingsInfoDelegate?
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -120,7 +122,9 @@ class SignUpVC: UIViewController {
                 let user = try await AuthenticationManager.shared.registerNewUserWithEmail(email: emailTextField.text!, password: passwordTextField.text!)
                 
                 let appUser = AppUser(uid: user.uid, email: user.email)
-                navigationController?.pushViewController(PersonalInfoVC(appUser: appUser, isModal: isModal), animated: true)
+                let path = PersonalInfoVC(appUser: appUser, isModal: isModal)
+                path.delegate = delagate
+                navigationController?.pushViewController(path, animated: true)
             } catch {
                 print(error)
             }
@@ -136,5 +140,10 @@ class SignUpVC: UIViewController {
 extension SignUpVC: UITextFieldDelegate {
     func textFieldDidChangeSelection(_ textField: UITextField) {
         configureStateOfTheSubmitButton()
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 }

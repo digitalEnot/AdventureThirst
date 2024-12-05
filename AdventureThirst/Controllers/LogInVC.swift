@@ -16,6 +16,8 @@ class LogInVC: UIViewController {
     
     private let isModal: Bool
     
+    weak var delegate: SettingsInfoDelegate?
+    
     init(isModal: Bool) {
         self.isModal = isModal
         super.init(nibName: nil, bundle: nil)
@@ -109,8 +111,8 @@ class LogInVC: UIViewController {
                 let userPersonalInfo = try await DatabaseManager.shared.fetchToDoItems(for: user.uid)
                 let userData =  UserData(uid: userPersonalInfo[0].userUid, email: user.email ?? "", name: userPersonalInfo[0].name, lastName: userPersonalInfo[0].lastName, middleName: userPersonalInfo[0].middleName, photoData: userPhoto)
                 if isModal {
+                    delegate?.didLogInToTheSystem(userData: userData)
                     self.dismiss(animated: true)
-                    // ну надо сделать ебаный 
                 } else {
                     navigationController?.pushViewController(ATTabBarController(userData: userData), animated: true)
                 }
@@ -125,8 +127,15 @@ extension LogInVC: UITextFieldDelegate {
     func textFieldDidChangeSelection(_ textField: UITextField) {
         configureStateOfTheSubmitButton()
     }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
 }
 
 #Preview() {
     LogInVC(isModal: false)
 }
+
+

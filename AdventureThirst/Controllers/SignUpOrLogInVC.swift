@@ -15,6 +15,8 @@ final class SignUpOrLogInVC: UIViewController {
     
     private let isModal: Bool
     
+    weak var delegate: SettingsInfoDelegate?
+    
     init(isModal: Bool) {
         self.isModal = isModal
         super.init(nibName: nil, bundle: nil)
@@ -101,12 +103,14 @@ final class SignUpOrLogInVC: UIViewController {
     }
 
     @objc func logInButtonTapped() {
-        navigationController?.pushViewController(LogInVC(isModal: isModal), animated: true)
+        let auth = LogInVC(isModal: isModal)
+        auth.delegate = delegate
+        navigationController?.pushViewController(auth, animated: true)
     }
     
     @objc func SignUpButtonTapped() {
-        navigationController?.pushViewController(SignUpVC(isModal: isModal), animated: true)
+        let auth = SignUpVC(isModal: isModal)
+        auth.delagate = delegate
+        navigationController?.pushViewController(auth, animated: true)
     }
-
 }
-

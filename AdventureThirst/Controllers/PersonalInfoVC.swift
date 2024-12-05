@@ -7,11 +7,17 @@
 
 import UIKit
 
+protocol SettingsInfoDelegate: AnyObject {
+    func didLogInToTheSystem(userData: UserData)
+}
+
 class PersonalInfoVC: UIViewController {
     
     let spinner = SpinnerViewController()
     let viewForSpinner = UIView()
     let appUser: AppUser
+    
+    weak var delegate: SettingsInfoDelegate?
     
     private let photoView = UIImageView()
     private let imagePicker = ImagePicker()
@@ -177,19 +183,19 @@ class PersonalInfoVC: UIViewController {
         
         Task {
             do {
-                print("1")
                 let sesseion = try await AuthenticationManager.shared.getCurrentSession()
                 try await DatabaseManager.shared.createToDoItem(item: PersonalInfoPayload(name: nameTextField.text!, lastName: lastnameTextField.text!, middleName: middlenamePasswordTextField.text ?? "", userUid: sesseion.uid))
                 
+                let photo = photoView.image
+                let photoData = photo?.jpegData(compressionQuality: 0.5)
+                guard let photoData = photoData else { return }
+                let userData = UserData(uid: sesseion.uid, email: sesseion.email ?? "", name: nameTextField.text!, lastName: lastnameTextField.text!, middleName: middlenamePasswordTextField.text!, photoData: photoData)
+                
                 if isModal {
+                    delegate?.didLogInToTheSystem(userData: userData)
                     self.dismiss(animated: true)
-                    //  ебаный делегат
                 } else {
-                    let photo = photoView.image
-                    let photoData = photo?.jpegData(compressionQuality: 0.5)
-                    guard let photoData = photoData else { return }
-                    
-                    navigationController?.pushViewController(ATTabBarController(userData: UserData(uid: sesseion.uid, email: sesseion.email ?? "", name: nameTextField.text!, lastName: lastnameTextField.text!, middleName: middlenamePasswordTextField.text!, photoData: photoData)), animated: true)
+                    navigationController?.pushViewController(ATTabBarController(userData: userData), animated: true)
                 }
             } catch {
                 
@@ -206,6 +212,11 @@ class PersonalInfoVC: UIViewController {
 extension PersonalInfoVC: UITextFieldDelegate {
     func textFieldDidChangeSelection(_ textField: UITextField) {
         configureStateOfTheSubmitButton()
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 }
 

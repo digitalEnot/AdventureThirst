@@ -26,12 +26,12 @@ class SettingsVC: UIViewController {
     
     var userData: UserData?
     
-    func updateSettingsHeader(userData: UserData) {
-        self.userData = userData
-        let settingsHeader = SettingsHeaderView(frame:  CGRect(x: 0, y: 0, width: view.bounds.width, height: 150))
-        settingsHeader.setData(userData: userData)
-        settingsTable.tableHeaderView = settingsHeader
-    }
+//    func updateSettingsHeader(userData: UserData) {
+//        self.userData = userData
+//        let settingsHeader = SettingsHeaderView(frame:  CGRect(x: 0, y: 0, width: view.bounds.width, height: 150))
+//        settingsHeader.setData(userData: userData)
+//        settingsTable.tableHeaderView = settingsHeader
+//    }
     
     let sectionTitles = ["Настройки", "История", ""]
     let buttonsInSettingsSection: [ButtonView] = [
@@ -58,7 +58,8 @@ class SettingsVC: UIViewController {
         view.backgroundColor = .systemBackground
         settingsTable.delegate = self
         settingsTable.dataSource = self
-        let settingsHeader = SettingsHeaderView(frame:  CGRect(x: 0, y: 0, width: view.bounds.width, height: 150))
+        let settingsHeader = SettingsHeaderView(frame:  CGRect(x: 0, y: 0, width: view.bounds.width, height: 270))
+        settingsHeader.delegate = self
         settingsHeader.setData(userData: userData ?? nil)
         settingsTable.tableHeaderView = settingsHeader
     }
@@ -111,6 +112,7 @@ extension SettingsVC: UITableViewDelegate, UITableViewDataSource {
                 do {
                     try await AuthenticationManager.shared.signOut()
                     let destVC = SignUpOrLogInVC(isModal: true)
+                    destVC.delegate = self
                     let navController = UINavigationController(rootViewController: destVC)
                     navController.modalPresentationStyle = .popover
                     navController.isModalInPresentation = true
@@ -132,4 +134,21 @@ extension SettingsVC: UITableViewDelegate, UITableViewDataSource {
 
 #Preview() {
     SettingsVC(userData: UserData(uid: "1", email: "", name: "", lastName: "", middleName: "", photoData: Data()))
+}
+
+extension SettingsVC: SettingsInfoDelegate {
+    func didLogInToTheSystem(userData: UserData) {
+        let header = settingsTable.tableHeaderView as? SettingsHeaderView
+        header?.setData(userData: userData)
+    }
+}
+
+extension SettingsVC: AddBusinessDelegate {
+    func showAddBusinessVC() {
+        print("hello")
+        let destVC = BusinessFormVC()
+        destVC.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(destVC, animated: true)
+        
+    }
 }

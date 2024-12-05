@@ -28,4 +28,5 @@ class ImagePicker: NSObject, UIImagePickerControllerDelegate & UINavigationContr
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true)
     }
-}
+ }
+

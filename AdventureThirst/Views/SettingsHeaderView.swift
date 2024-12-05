@@ -7,43 +7,32 @@
 
 import UIKit
 
+protocol AddBusinessDelegate: AnyObject {
+    func showAddBusinessVC()
+}
+
 class SettingsHeaderView: UIView {
     
     private let photoView = UIImageView()
     private let imagePicker = ImagePicker()
     private let imagePickerButton = UIButton(type: .system)
     private let userName = UILabel()
+    private let businessView = AddBusinessView()
     
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-//        getUserData()
         configure()
         constraints()
     }
-
+    
+    weak var delegate: AddBusinessDelegate?
     
     func setData(userData: UserData?) {
         guard let userData else { return }
         photoView.image = UIImage(data: userData.photoData)
         userName.text = userData.name
     }
-    
-//    private func getUserData() {
-//        Task {
-//            do {
-//                let session = try await AuthenticationManager.shared.getCurrentSession()
-//                let userdata = try await DatabaseManager.shared.fetchToDoItems(for: session.uid)
-//                print(session.uid)
-//                let photoData = try await StorageManager.shared.fetchProfilePhoto(for: session)
-//                
-//                photoView.image = UIImage(data: photoData)
-//                userName.text = userdata[0].name
-//            } catch {
-//                print("error when fetching userData: \(error)")
-//            }
-//        }
-//    }
     
     private func configure() {
         addSubview(photoView)
@@ -56,6 +45,24 @@ class SettingsHeaderView: UIView {
 //        userName.text = "Евгений"
         userName.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         userName.translatesAutoresizingMaskIntoConstraints = false
+        
+        addSubview(businessView)
+        businessView.translatesAutoresizingMaskIntoConstraints = false
+        businessView.layer.cornerRadius = 10
+        
+        
+        businessView.layer.shadowColor = UIColor.gray.cgColor
+        businessView.layer.shadowOpacity = 0.5
+        businessView.layer.shadowOffset = CGSize(width: 0, height: 5)
+        businessView.layer.shadowRadius = 10
+        
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(addBusiness))
+        businessView.addGestureRecognizer(gesture)
+    }
+    
+    @objc func addBusiness() {
+        delegate?.showAddBusinessVC()
+        print("pressed")
     }
     
     
@@ -67,7 +74,15 @@ class SettingsHeaderView: UIView {
             photoView.widthAnchor.constraint(equalToConstant: 100),
             
             userName.topAnchor.constraint(equalTo: photoView.bottomAnchor, constant: 15),
-            userName.centerXAnchor.constraint(equalTo: centerXAnchor)
+            userName.centerXAnchor.constraint(equalTo: centerXAnchor),
+            
+            businessView.topAnchor.constraint(equalTo: userName.bottomAnchor, constant: 25),
+            businessView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15),
+            businessView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15),
+            businessView.heightAnchor.constraint(equalToConstant: 96)
+
+            
+            
         ])
     }
     
@@ -78,6 +93,6 @@ class SettingsHeaderView: UIView {
 }
 
 
-//#Preview() {
-//    SettingsVC()
-//}
+#Preview() {
+    SettingsVC(userData: UserData(uid: "", email: "", name: "", lastName: "", middleName: "", photoData: Data()))
+}

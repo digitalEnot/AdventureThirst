@@ -53,6 +53,7 @@ class ATTextField: UITextField {
         backgroundColor = .systemBackground
         autocorrectionType = .no
         clearButtonMode = .whileEditing
+        returnKeyType = .done
         
         attributedPlaceholder = NSAttributedString(string: placeholder)
         font = .boldSystemFont(ofSize: 15)
