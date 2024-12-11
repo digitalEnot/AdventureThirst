@@ -41,7 +41,6 @@ class AddBusinessView: UIView {
         picture.image = UIImage(named: "surfvan")
         picture.translatesAutoresizingMaskIntoConstraints = false
         picture.contentMode = .scaleAspectFit
-//        picture.backgroundColor = .blue
         
         let padding: CGFloat = 18
         NSLayoutConstraint.activate([
@@ -51,10 +50,10 @@ class AddBusinessView: UIView {
             viewDescription.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -padding),
             viewDescription.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding),
             
-            picture.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -15),
-            picture.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 25),
-            picture.heightAnchor.constraint(equalToConstant: 170),
-            picture.widthAnchor.constraint(equalToConstant: 170)
+            picture.centerYAnchor.constraint(equalTo: centerYAnchor),
+            picture.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -5),
+            picture.heightAnchor.constraint(equalToConstant: 70),
+            picture.widthAnchor.constraint(equalToConstant: 90)
         ])
     }
     
@@ -63,5 +62,5 @@ class AddBusinessView: UIView {
 }
 
 #Preview() {
-    SettingsVC(userData: UserData(uid: "", email: "", name: "", lastName: "", middleName: "", photoData: Data()))
+    SettingsVC(userData: UserData(uid: "", email: "", name: "", lastName: "", middleName: "", photoData: Data()), companies: [])
 }

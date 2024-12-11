@@ -103,24 +103,101 @@ class LogInVC: UIViewController {
         ])
     }
     
+//    @objc func buttonPressed() {
+//        Task {
+//            do {
+//                let user = try await AuthenticationManager.shared.signInWithEmail(email: emailTextField.text!, password: passwordTextField.text!)
+//                let userPhoto = try await StorageManager.shared.fetchProfilePhoto(for: user)
+//                let userPersonalInfo = try await DatabaseManager.shared.fetchToDoItems(for: user.uid)
+//                let userData =  UserData(uid: userPersonalInfo[0].userUid, email: user.email ?? "", name: userPersonalInfo[0].name, lastName: userPersonalInfo[0].lastName, middleName: userPersonalInfo[0].middleName, photoData: userPhoto)
+////                getCompanies(for: user, userData: userData)
+//                let companies = try await DatabaseManager.shared.fetchCompany(for: user.uid)
+//                if isModal {
+//                    async delegate?.didLogInToTheSystem(userData: userData, companies: getCompanies(companies: companies))
+//                    self.dismiss(animated: true)
+//                } else {
+//                    await navigationController?.pushViewController(ATTabBarController(userData: userData, appCompanies: getCompanies(companies: companies)), animated: true)
+//                }
+//            } catch {
+//                print(error)
+//            }
+//        }
+//    }
+    
     @objc func buttonPressed() {
         Task {
             do {
                 let user = try await AuthenticationManager.shared.signInWithEmail(email: emailTextField.text!, password: passwordTextField.text!)
                 let userPhoto = try await StorageManager.shared.fetchProfilePhoto(for: user)
                 let userPersonalInfo = try await DatabaseManager.shared.fetchToDoItems(for: user.uid)
-                let userData =  UserData(uid: userPersonalInfo[0].userUid, email: user.email ?? "", name: userPersonalInfo[0].name, lastName: userPersonalInfo[0].lastName, middleName: userPersonalInfo[0].middleName, photoData: userPhoto)
+                let userData = UserData(
+                    uid: userPersonalInfo[0].userUid,
+                    email: user.email ?? "",
+                    name: userPersonalInfo[0].name,
+                    lastName: userPersonalInfo[0].lastName,
+                    middleName: userPersonalInfo[0].middleName,
+                    photoData: userPhoto
+                )
+                
+                let companies = try await DatabaseManager.shared.fetchCompany(for: user.uid)
+                let appCompanies = await getCompanies(companies: companies) // Await here
+                
                 if isModal {
-                    delegate?.didLogInToTheSystem(userData: userData)
+                    // Ensure all data is fetched before calling delegate
+                    delegate?.didLogInToTheSystem(userData: userData, companies: appCompanies)
                     self.dismiss(animated: true)
                 } else {
-                    navigationController?.pushViewController(ATTabBarController(userData: userData), animated: true)
+                    navigationController?.pushViewController(ATTabBarController(userData: userData, appCompanies: appCompanies), animated: true)
                 }
             } catch {
-                print(error)
+                print("Error: \(error)")
             }
         }
     }
+
+    
+    func getCompanies(companies: [Company]) async -> [AppCompany] {
+        var appCompanies: [AppCompany] = []
+        
+        for company in companies {
+            do {
+                let photoData = try await StorageManager.shared.fetchCompanyPhoto(for: company.name)
+                print("photoData: \(photoData)")
+                let appCompany = AppCompany(
+                    name: company.name,
+                    description: company.description,
+                    photo: photoData,
+                    address: company.address,
+                    activities: company.activities,
+                    phoneNumber: company.phoneNumber,
+                    openHours: company.openHours,
+                    userUid: company.userUid
+                )
+                appCompanies.append(appCompany)
+            } catch {
+                print("Failed to fetch photo for company: \(company.name), error: \(error)")
+            }
+        }
+        print("fucking shit: \(appCompanies)")
+        return appCompanies
+    }
+    
+//    func getCompanies(companies: [Company]) -> [AppCompany] {
+//        var appCompanies: [AppCompany] = []
+//        companies.forEach { company in
+//            Task {
+//                do {
+//                    let photoData = try await StorageManager.shared.fetchCompanyPhoto(for: company.name)
+//                    print("photoData: \(photoData)")
+//                    let appCompany = AppCompany(name: company.name, description: company.description, photo: photoData, address: company.address, activities: company.activities, phoneNumber: company.phoneNumber, openHours: company.openHours, userUid: company.userUid)
+//                    appCompanies.append(appCompany)
+//                } catch {
+//                    
+//                }
+//            }
+//        }
+//        return appCompanies
+//    }
 }
 
 extension LogInVC: UITextFieldDelegate {

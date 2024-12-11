@@ -15,3 +15,27 @@ struct UserData: Codable {
     let middleName: String?
     let photoData: Data
 }
+
+
+struct userData: Codable {
+    let id: Int
+    let createdAt: String
+    let name: String
+    let lastName: String
+    let middleName: String
+    let userUid: String
+}
+
+struct PersonalInfoPayload: Codable {
+    let name: String
+    let lastName: String
+    let middleName: String
+    let userUid: String
+    
+    enum CodingKeys: String, CodingKey {
+        case name = "name"
+        case lastName = "last_name"
+        case middleName = "middle_name"
+        case userUid = "user_uid"
+    }
+}

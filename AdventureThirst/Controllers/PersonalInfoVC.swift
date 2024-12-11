@@ -8,7 +8,7 @@
 import UIKit
 
 protocol SettingsInfoDelegate: AnyObject {
-    func didLogInToTheSystem(userData: UserData)
+    func didLogInToTheSystem(userData: UserData, companies: [AppCompany])
 }
 
 class PersonalInfoVC: UIViewController {
@@ -192,10 +192,10 @@ class PersonalInfoVC: UIViewController {
                 let userData = UserData(uid: sesseion.uid, email: sesseion.email ?? "", name: nameTextField.text!, lastName: lastnameTextField.text!, middleName: middlenamePasswordTextField.text!, photoData: photoData)
                 
                 if isModal {
-                    delegate?.didLogInToTheSystem(userData: userData)
+                    delegate?.didLogInToTheSystem(userData: userData, companies: [])
                     self.dismiss(animated: true)
                 } else {
-                    navigationController?.pushViewController(ATTabBarController(userData: userData), animated: true)
+                    navigationController?.pushViewController(ATTabBarController(userData: userData, appCompanies: []), animated: true)
                 }
             } catch {
                 

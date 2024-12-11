@@ -9,7 +9,7 @@ import UIKit
 
 class ATTextField: UITextField {
     
-    private let padding = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 0)
+    private let padding = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 30)
     
     init(placeholder: String) {
         super.init(frame: .zero)

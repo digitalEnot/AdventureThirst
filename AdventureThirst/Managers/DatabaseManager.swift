@@ -8,28 +8,6 @@
 import Foundation
 import Supabase
 
-struct userData: Codable {
-    let id: Int
-    let createdAt: String
-    let name: String
-    let lastName: String
-    let middleName: String
-    let userUid: String
-}
-
-struct PersonalInfoPayload: Codable {
-    let name: String
-    let lastName: String
-    let middleName: String
-    let userUid: String
-    
-    enum CodingKeys: String, CodingKey {
-        case name = "name"
-        case lastName = "last_name"
-        case middleName = "middle_name"
-        case userUid = "user_uid"
-    }
-}
 
 
 class DatabaseManager {
@@ -39,9 +17,7 @@ class DatabaseManager {
     let client = SupabaseClient(supabaseURL: URL(string: "https://nqfktvbassmzpsqxbeff.supabase.co")!, supabaseKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5xZmt0dmJhc3NtenBzcXhiZWZmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI0NDg4MjYsImV4cCI6MjA0ODAyNDgyNn0.c6V4iVcJdWPCat-aAV8LkTYlqIhfLccDVttBa-j7sGQ")
     
     func createToDoItem(item: PersonalInfoPayload) async throws {
-        print("2")
-        let response = try await client.from("personall").insert(item).execute()
-        print("RESPONSE: \(response)")
+        let _ = try await client.from("personall").insert(item).execute()
     }
     
     func fetchToDoItems(for uid: String) async throws -> [userData] {
@@ -53,11 +29,22 @@ class DatabaseManager {
         return todos
     }
     
-//    func deleteToDoItem(id: Int) async throws {
-//        let response = try await client.from("personal_info").delete().eq("id", value: id).execute()
-//        print(response)
-//        print(response.status)
-//        print(response.data)
-//    }
+    func createCompany(item: CompanyPayLoad) async throws {
+        let _ = try await client.from("company").insert(item).execute()
+    }
+    
+    func fetchCompany(for uid: String) async throws -> [Company] {
+        let response = try await client.from("company").select().equals("user_uid", value: uid).execute()
+        let data = response.data
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        do {
+            let company = try decoder.decode([Company].self, from: data)
+            return company
+        } catch{
+            print("pizda")
+            throw error
+        }
+    }
 }
 

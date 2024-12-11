@@ -10,9 +10,11 @@ import UIKit
 class ATTabBarController: UITabBarController {
     
     let userData: UserData
+    let companies: [AppCompany]
     
-    init(userData: UserData) {
+    init(userData: UserData, appCompanies: [AppCompany]) {
         self.userData = userData
+        self.companies = appCompanies
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -47,7 +49,7 @@ class ATTabBarController: UITabBarController {
     
     
     private func createSettingsNC() -> UINavigationController {
-        let favoritesCocktailsVC = SettingsVC(userData: userData)
+        let favoritesCocktailsVC = SettingsVC(userData: userData, companies: companies)
         favoritesCocktailsVC.title = "Настройки"
         favoritesCocktailsVC.tabBarItem = UITabBarItem(title: "Настройки", image: UIImage(systemName: "gear"), tag: 1)
         return UINavigationController(rootViewController: favoritesCocktailsVC)

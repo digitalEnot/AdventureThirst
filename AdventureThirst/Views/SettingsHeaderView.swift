@@ -19,11 +19,20 @@ class SettingsHeaderView: UIView {
     private let userName = UILabel()
     private let businessView = AddBusinessView()
     
+    let companies: [AppCompany]
     
-    override init(frame: CGRect) {
+    
+    init(frame: CGRect, companies: [AppCompany]) {
+        self.companies = companies
         super.init(frame: frame)
         configure()
         constraints()
+    }
+    
+    func updateCompanies(with count: Int) {
+        if count > 0 {
+            businessView.removeFromSuperview()
+        }
     }
     
     weak var delegate: AddBusinessDelegate?
@@ -65,6 +74,9 @@ class SettingsHeaderView: UIView {
         print("pressed")
     }
     
+    private func setCompanies() {
+        
+    }
     
     private func constraints() {
         NSLayoutConstraint.activate([
@@ -79,10 +91,9 @@ class SettingsHeaderView: UIView {
             businessView.topAnchor.constraint(equalTo: userName.bottomAnchor, constant: 25),
             businessView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15),
             businessView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15),
-            businessView.heightAnchor.constraint(equalToConstant: 96)
-
-            
-            
+            businessView.heightAnchor.constraint(equalToConstant: 96),
+//            businessView.widthAnchor.constraint(equalToConstant: 450),
+//            businessView.centerXAnchor.constraint(equalTo: centerXAnchor)
         ])
     }
     
@@ -94,5 +105,5 @@ class SettingsHeaderView: UIView {
 
 
 #Preview() {
-    SettingsVC(userData: UserData(uid: "", email: "", name: "", lastName: "", middleName: "", photoData: Data()))
+    SettingsVC(userData: UserData(uid: "", email: "", name: "", lastName: "", middleName: "", photoData: Data()), companies: [])
 }

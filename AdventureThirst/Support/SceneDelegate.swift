@@ -22,13 +22,69 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let authUser = try? await AuthenticationManager.shared.getCurrentSession()
             let auth = SignUpOrLogInVC(isModal: false)
             if let authUser {
+//                let navCont = UINavigationController(rootViewController: auth)
+//                let personalInfo = try await DatabaseManager.shared.fetchToDoItems(for: authUser.uid)
+//                let profilePhotoData = try await StorageManager.shared.fetchProfilePhoto(for: authUser)
+//                let companies = try await DatabaseManager.shared.fetchCompany(for: authUser.uid)
+//                var appCompanies: [AppCompany] = []
+//                
+//                for company in appCompanies {
+//                    do {
+//                        let photoData = try await StorageManager.shared.fetchCompanyPhoto(for: company.name)
+//                        let appCompany = AppCompany(name: company.name, description: company.description, photo: photoData, address: company.address, activities: company.activities, phoneNumber: company.phoneNumber, openHours: company.openHours, userUid: company.userUid)
+//                        appCompanies.append(appCompany)
+//                        let userData = UserData(uid: authUser.uid, email: authUser.email ?? "", name: personalInfo[0].name, lastName: personalInfo[0].lastName, middleName: personalInfo[0].middleName, photoData: profilePhotoData)
+//                        navCont.pushViewController(ATTabBarController(userData: userData, appCompanies: appCompanies), animated: false)
+//                        window?.rootViewController = navCont
+//                        return
+//                    } catch {
+//                        
+//                    }
+//                }
+//                print("shiting shit \(appCompanies)")
+                
                 let navCont = UINavigationController(rootViewController: auth)
-                let personalInfo = try await DatabaseManager.shared.fetchToDoItems(for: authUser.uid)
-                let photoData = try await StorageManager.shared.fetchProfilePhoto(for: authUser)
-                let userData = UserData(uid: authUser.uid, email: authUser.email ?? "", name: personalInfo[0].name, lastName: personalInfo[0].lastName, middleName: personalInfo[0].middleName, photoData: photoData)
-                navCont.pushViewController(ATTabBarController(userData: userData), animated: false)
-                window?.rootViewController = navCont
-                return
+
+                do {
+                    let personalInfo = try await DatabaseManager.shared.fetchToDoItems(for: authUser.uid)
+                    let profilePhotoData = try await StorageManager.shared.fetchProfilePhoto(for: authUser)
+                    let companies = try await DatabaseManager.shared.fetchCompany(for: authUser.uid)
+                    var appCompanies: [AppCompany] = []
+                    
+                    for company in companies {
+                        // Fetch company photo asynchronously
+                        let photoData = try await StorageManager.shared.fetchCompanyPhoto(for: company.name)
+                        let appCompany = AppCompany(
+                            name: company.name,
+                            description: company.description,
+                            photo: photoData,
+                            address: company.address,
+                            activities: company.activities,
+                            phoneNumber: company.phoneNumber,
+                            openHours: company.openHours,
+                            userUid: company.userUid
+                        )
+                        appCompanies.append(appCompany)
+                    }
+                    
+                    // After all companies are processed
+                    let userData = UserData(
+                        uid: authUser.uid,
+                        email: authUser.email ?? "",
+                        name: personalInfo[0].name,
+                        lastName: personalInfo[0].lastName,
+                        middleName: personalInfo[0].middleName,
+                        photoData: profilePhotoData
+                    )
+                    navCont.pushViewController(ATTabBarController(userData: userData, appCompanies: appCompanies), animated: false)
+                    window?.rootViewController = navCont
+                    
+                    // Print appCompanies after it's populated
+                    print(appCompanies)
+                } catch {
+                    print("Error: \(error)")
+                }
+
             } else {
                 window?.rootViewController = UINavigationController(rootViewController: auth)
             }

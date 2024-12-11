@@ -35,6 +35,8 @@ class SettingsTableViewCell: UITableViewCell {
         
         if hasArrow {
             arrowImage.image = UIImage(systemName: "chevron.right")?.withTintColor(.black, renderingMode: .alwaysOriginal)
+        } else {
+            arrowImage.image = nil
         }
     }
     
