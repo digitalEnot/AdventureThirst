@@ -146,7 +146,7 @@ class BusinessFormWithPhotoVC: UIViewController {
                 if let photoData = image.jpegData(compressionQuality: 0.5) {
                     print(photoData)
                     do {
-                        try await StorageManager.shared.uploadCompanyPhoto(for: self.orgName, photoData: photoData)
+                        try await StorageManager.shared.uploadCompanyPhoto(for: self.orgPhoneNumber, photoData: photoData)
                         self.photoView.image = image
                         self.spinner.spinner.stopAnimating()
                     } catch {

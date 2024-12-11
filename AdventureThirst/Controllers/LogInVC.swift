@@ -161,7 +161,7 @@ class LogInVC: UIViewController {
         
         for company in companies {
             do {
-                let photoData = try await StorageManager.shared.fetchCompanyPhoto(for: company.name)
+                let photoData = try await StorageManager.shared.fetchCompanyPhoto(for: company.phoneNumber)
                 print("photoData: \(photoData)")
                 let appCompany = AppCompany(
                     name: company.name,
@@ -187,7 +187,7 @@ class LogInVC: UIViewController {
 //        companies.forEach { company in
 //            Task {
 //                do {
-//                    let photoData = try await StorageManager.shared.fetchCompanyPhoto(for: company.name)
+//                    let photoData = try await StorageManager.shared.fetchCompanyPhoto(for: company.phoneNumber)
 //                    print("photoData: \(photoData)")
 //                    let appCompany = AppCompany(name: company.name, description: company.description, photo: photoData, address: company.address, activities: company.activities, phoneNumber: company.phoneNumber, openHours: company.openHours, userUid: company.userUid)
 //                    appCompanies.append(appCompany)

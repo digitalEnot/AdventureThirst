@@ -30,7 +30,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 //                
 //                for company in appCompanies {
 //                    do {
-//                        let photoData = try await StorageManager.shared.fetchCompanyPhoto(for: company.name)
+//                        let photoData = try await StorageManager.shared.fetchCompanyPhoto(for: company.phoneNumber)
 //                        let appCompany = AppCompany(name: company.name, description: company.description, photo: photoData, address: company.address, activities: company.activities, phoneNumber: company.phoneNumber, openHours: company.openHours, userUid: company.userUid)
 //                        appCompanies.append(appCompany)
 //                        let userData = UserData(uid: authUser.uid, email: authUser.email ?? "", name: personalInfo[0].name, lastName: personalInfo[0].lastName, middleName: personalInfo[0].middleName, photoData: profilePhotoData)
@@ -53,7 +53,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     
                     for company in companies {
                         // Fetch company photo asynchronously
-                        let photoData = try await StorageManager.shared.fetchCompanyPhoto(for: company.name)
+                        let photoData = try await StorageManager.shared.fetchCompanyPhoto(for: company.phoneNumber)
                         let appCompany = AppCompany(
                             name: company.name,
                             description: company.description,

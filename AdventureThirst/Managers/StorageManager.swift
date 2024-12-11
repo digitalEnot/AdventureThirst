@@ -36,15 +36,15 @@ class StorageManager {
     }
     
     
-    func uploadCompanyPhoto(for companyName: String, photoData: Data) async throws {
+    func uploadCompanyPhoto(for companyPhone: String, photoData: Data) async throws {
         do {
-            _ = try await storage.from("company_image").update("\(companyName)/company_photo.jpg", data: photoData, options: FileOptions(cacheControl: "2400"))
+            _ = try await storage.from("company_image").upload("\(companyPhone)/company_photo.jpg", data: photoData, options: FileOptions(cacheControl: "2400"))
         } catch {
             throw URLError(.badServerResponse)
         }
     }
     
-    func fetchCompanyPhoto(for companyName: String) async throws -> Data {
-        return try await storage.from("company_image").download(path:"\(companyName)/company_photo.jpg")
+    func fetchCompanyPhoto(for companyPhone: String) async throws -> Data {
+        return try await storage.from("company_image").download(path:"\(companyPhone)/company_photo.jpg")
     }
 }

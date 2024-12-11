@@ -134,7 +134,14 @@ extension SettingsVC: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let numOfSec = companies.count > 0 ? companies.count + sectionTitles.count + 1 : companies.count + sectionTitles.count
-        if indexPath.section == numOfSec - 1 {
+        
+        if indexPath.section <= companies.count - 1 {
+            let company = companies[indexPath.section]
+            let destVC = BusinessTabBarController(company: company)
+            destVC.hidesBottomBarWhenPushed = true
+            navigationController?.pushViewController(destVC, animated: true)
+            
+        } else if indexPath.section == numOfSec - 1 {
             Task {
                 do {
                     try await AuthenticationManager.shared.signOut()
@@ -152,7 +159,7 @@ extension SettingsVC: UITableViewDelegate, UITableViewDataSource {
             showAddBusinessVC()
         
         }
-        
+    
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
