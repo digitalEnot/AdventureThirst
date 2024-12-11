@@ -15,6 +15,7 @@ class BusinessFormVC: UIViewController {
     private let orgPhoneNumberPasswordTextField = ATTextField(placeholder: "Номер телефона", background: UIColor(hex: "#8abdedFF")!, border: UIColor(hex: "#1c88edFF")!)
     private let nextButton = UIButton()
     
+    weak var delegate: CompanyRegistrationDelegate?
     
 
     override func viewDidLoad() {
@@ -98,6 +99,7 @@ class BusinessFormVC: UIViewController {
     
     @objc func buttonPressed() {
         let path = BusinessFormWithPhotoVC(orgName: orgNameTextField.text ?? "", orgWorkingHours: orgWorkingHoursTextField.text ?? "", orgAdress: orgAdressTextField.text ?? "", orgPhoneNumber: orgPhoneNumberPasswordTextField.text ?? "")
+        path.delegate = delegate
         path.title = "Регистрация компании"
         navigationController?.pushViewController(path, animated: true)
     }

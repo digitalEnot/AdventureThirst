@@ -212,9 +212,29 @@ extension SettingsVC: SettingsInfoDelegate {
 extension SettingsVC: AddBusinessDelegate {
     func showAddBusinessVC() {
         let destVC = BusinessFormVC()
+        destVC.delegate = self
         destVC.title = "Регистрация компании"
         destVC.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(destVC, animated: true)
+    }
+}
+
+extension SettingsVC: CompanyRegistrationDelegate {
+    func didRegisterCompany(company: AppCompany) {
+        companies.append(company)
+        numberOfSections = companies.count + sectionTitles.count
+        settingsTable.reloadData()
+        if companies.count > 0 {
+            let settingsHeader = SettingsHeaderView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 180), companies: companies)
+            settingsHeader.updateCompanies(with: 1)
+            settingsHeader.setData(userData: userData)
+            settingsTable.tableHeaderView = settingsHeader
+        } else {
+            let settingsHeader = SettingsHeaderView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 300), companies: companies)
+            settingsHeader.setData(userData: userData)
+            settingsHeader.delegate = self
+            settingsTable.tableHeaderView = settingsHeader
+        }
     }
 }
 

@@ -5,6 +5,10 @@
 //  Created by Evgeni Novik on 08.12.2024.
 //
 
+protocol CompanyRegistrationDelegate: AnyObject {
+    func didRegisterCompany(company: AppCompany)
+}
+
 import UIKit
 
 class BusinessFormWithPhotoVC: UIViewController {
@@ -41,6 +45,8 @@ class BusinessFormWithPhotoVC: UIViewController {
     let orgWorkingHours: String
     let orgAdress: String
     let orgPhoneNumber: String
+    
+    weak var delegate: CompanyRegistrationDelegate?
     
     init(orgName: String, orgWorkingHours: String, orgAdress: String, orgPhoneNumber: String) {
         self.orgName = orgName
@@ -162,6 +168,7 @@ class BusinessFormWithPhotoVC: UIViewController {
                 guard let photoData = photo?.jpegData(compressionQuality: 0.5) else { return }
                 let company = AppCompany(name: orgName, description: descriptionTextField.text, photo: photoData, address: orgAdress, activities: [], phoneNumber: orgPhoneNumber, openHours: orgWorkingHours, userUid: sesseion.uid)
                 
+                delegate?.didRegisterCompany(company: company)
                 navigationController?.pushViewController(BusinessTabBarController(company: company), animated: true)
             } catch {
                 print("Error: \(error)")
