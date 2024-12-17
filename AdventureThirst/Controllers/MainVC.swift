@@ -13,17 +13,71 @@ enum SecondSection {
 
 class MainVC: UIViewController {
     var activities: [AppActivity] = []
+    var filteredActivities: [AppActivity] = []
     var dataSourse: UICollectionViewDiffableDataSource<Section, AppActivity>!
     var collectionView: UICollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout())
     
+    let categories: [ATCategory] = [
+        ATCategory(name: ActivityNames.ski, icon: UIImage(named: "ski")?.withRenderingMode(.alwaysTemplate)),
+        ATCategory(name: ActivityNames.sup, icon: UIImage(systemName: "surfboard")),
+        ATCategory(name: ActivityNames.yacht, icon: UIImage(named: "yacht")?.withRenderingMode(.alwaysTemplate)),
+        ATCategory(name: ActivityNames.paintball, icon: UIImage(named: "paintball")?.withRenderingMode(.alwaysTemplate)),
+        ATCategory(name: ActivityNames.skydiving, icon: UIImage(named: "skydiving")?.withRenderingMode(.alwaysTemplate)),
+        ATCategory(name: ActivityNames.snowboarding, icon: UIImage(systemName: "figure.snowboarding")),
+        ATCategory(name: ActivityNames.kiteserfing, icon: UIImage(named: "kitesurfing")?.withRenderingMode(.alwaysTemplate)),
+        ATCategory(name: ActivityNames.serfing, icon: UIImage(systemName: "figure.surfing")),
+        ATCategory(name: ActivityNames.curling, icon: UIImage(systemName: "figure.curling")),
+        ATCategory(name: ActivityNames.climbing, icon: UIImage(named: "climbing")?.withRenderingMode(.alwaysTemplate)),
+        ATCategory(name: ActivityNames.diving, icon: UIImage(named: "diving")?.withRenderingMode(.alwaysTemplate)),
+        ATCategory(name: ActivityNames.other, icon: UIImage(systemName: "oar.2.crossed"))
+    ]
+    var selectedCategory: ATCategory? = nil
+    private var categoriesCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.itemSize = CGSize(width: 75, height: 100)
+        
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.register(ActivityCategoryCell.self, forCellWithReuseIdentifier: "ActivityCategoryCell")
+        return collectionView
+    }()
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationController?.setNavigationBarHidden(true, animated: false)
+        configureCategoriesCollectionView()
         configureCollectionView()
         configureDataSourse()
+        configureConstants()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         fetchActivities()
+    }
+    
+    private func configureCategoriesCollectionView() {
+        view.addSubview(categoriesCollectionView)
+        categoriesCollectionView.delegate = self
+        categoriesCollectionView.dataSource = self
+        categoriesCollectionView.backgroundColor = .systemBackground
+        categoriesCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        categoriesCollectionView.showsHorizontalScrollIndicator = false
+
+    }
+    
+    private func configureConstants() {
+        NSLayoutConstraint.activate([
+            categoriesCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            categoriesCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+            categoriesCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
+            categoriesCollectionView.heightAnchor.constraint(equalToConstant: 100),
+            
+            collectionView.topAnchor.constraint(equalTo: categoriesCollectionView.bottomAnchor, constant: -20),
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
     }
     
     private func fetchActivities() {
@@ -35,6 +89,7 @@ class MainVC: UIViewController {
                 let appActivity = AppActivity(name: activity.name, location: activity.location, description: activity.description, price: activity.price, duration: activity.duration, activityCategory: activity.activityCategory, photo: UIImage(data: photoData)!, companyName: activity.companyName, uid: activity.uid)
                 activ.append(appActivity)
             }
+            print(activ)
             self.activities = activ
             updateData(on: self.activities)
         }
@@ -46,6 +101,7 @@ class MainVC: UIViewController {
         collectionView.delegate = self
         collectionView.backgroundColor = .systemBackground
         collectionView.register(ActivityCell.self, forCellWithReuseIdentifier: ActivityCell.reuseID)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
     }
     
     
@@ -59,9 +115,14 @@ class MainVC: UIViewController {
     
     
     func updateData(on activities: [AppActivity]) {
+        var filteredActivities = activities
+        if selectedCategory != nil {
+            filteredActivities = activities.filter { $0.activityCategory == selectedCategory?.name?.rawValue }
+        }
+        
         var snapshot = NSDiffableDataSourceSnapshot<Section, AppActivity>()
         snapshot.appendSections([.main])
-        snapshot.appendItems(activities)
+        snapshot.appendItems(filteredActivities)
         DispatchQueue.main.async {
             self.dataSourse.apply(snapshot, animatingDifferences: true)
         }
@@ -69,7 +130,37 @@ class MainVC: UIViewController {
 }
 
 
-extension MainVC: UICollectionViewDelegate {
+extension MainVC: UICollectionViewDelegate, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        categories.count
+    }
     
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = categoriesCollectionView.dequeueReusableCell(withReuseIdentifier: "ActivityCategoryCell", for: indexPath) as? ActivityCategoryCell else { return UICollectionViewCell() }
+        cell.set(icon: categories[indexPath.row].icon, name: categories[indexPath.row].name?.rawValue)
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if collectionView == categoriesCollectionView {
+            for cell in collectionView.visibleCells {
+                guard let cell = cell as? ActivityCategoryCell else { return }
+                cell.image.tintColor = .gray
+                cell.label.textColor = .gray
+            }
+            guard let choocenCell = collectionView.cellForItem(at: indexPath) as? ActivityCategoryCell else { return }
+            if categories[indexPath.row].name?.rawValue == selectedCategory?.name?.rawValue {
+                selectedCategory = nil
+                updateData(on: activities)
+                return
+            }
+            choocenCell.image.tintColor = .black
+            choocenCell.label.textColor = .black
+            
+            selectedCategory = categories[indexPath.row]
+            updateData(on: activities)
+        } else {
+            
+        }
+    }
 }
-

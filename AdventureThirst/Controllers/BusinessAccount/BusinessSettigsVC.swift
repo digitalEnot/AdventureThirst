@@ -75,7 +75,7 @@ extension BusinessSettigsVC: UITableViewDelegate, UITableViewDataSource {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: SettingsTableViewCell.identifier, for: indexPath) as? SettingsTableViewCell else {
                 return UITableViewCell()
             }
-            cell.setCell(text: "Выйти из аккаунта", image: nil, textColor: .red, hasArrow: false)
+            cell.setCell(text: "Выйти из бизнесс профиля", image: nil, textColor: .red, hasArrow: false)
             return cell
         } else {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: SettingsTableViewCell.identifier, for: indexPath) as? SettingsTableViewCell else {
