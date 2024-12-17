@@ -42,7 +42,37 @@ class DatabaseManager {
             let company = try decoder.decode([Company].self, from: data)
             return company
         } catch{
-            print("pizda")
+            throw error
+        }
+    }
+    
+    func createActivity(item: ActivityPayLoad, company: CompanyPayLoad) async throws {
+        let _ = try await client.from("activities").insert(item).execute()
+        let _ = try await client.from("company").update(["activities": company.activities]).eq("name", value: company.name) .execute()
+    }
+    
+    func fetchActivities(for companyName: String) async throws -> [Activity] {
+        let response = try await client.from("activities").select().equals("company_name", value: companyName).execute()
+        let data = response.data
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        do {
+            let activities = try decoder.decode([Activity].self, from: data)
+            return activities
+        } catch{
+            throw error
+        }
+    }
+    
+    func fetchAllActivities() async throws -> [Activity] {
+        let response = try await client.from("activities").select().execute()
+        let data = response.data
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        do {
+            let activities = try decoder.decode([Activity].self, from: data)
+            return activities
+        } catch{
             throw error
         }
     }

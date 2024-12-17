@@ -162,7 +162,6 @@ class LogInVC: UIViewController {
         for company in companies {
             do {
                 let photoData = try await StorageManager.shared.fetchCompanyPhoto(for: company.phoneNumber)
-                print("photoData: \(photoData)")
                 let appCompany = AppCompany(
                     name: company.name,
                     description: company.description,
@@ -178,7 +177,6 @@ class LogInVC: UIViewController {
                 print("Failed to fetch photo for company: \(company.name), error: \(error)")
             }
         }
-        print("fucking shit: \(appCompanies)")
         return appCompanies
     }
     

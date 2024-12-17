@@ -1,23 +1,36 @@
 //
-//  MainVC.swift
+//  BusinessActivitiesVC.swift
 //  AdventureThirst
 //
-//  Created by Evgeni Novik on 08.11.2024.
+//  Created by Evgeni Novik on 08.12.2024.
 //
 
 import UIKit
 
-enum SecondSection {
+enum Section {
     case main
 }
 
-class MainVC: UIViewController {
+
+class BusinessActivitiesVC: UIViewController {
+    var company: AppCompany
     var activities: [AppActivity] = []
     var dataSourse: UICollectionViewDiffableDataSource<Section, AppActivity>!
     var collectionView: UICollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout())
+
+    
+    init(company: AppCompany) {
+        self.company = company
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        configureNavItems()
         configureCollectionView()
         configureDataSourse()
     }
@@ -28,7 +41,7 @@ class MainVC: UIViewController {
     
     private func fetchActivities() {
         Task {
-            let activities = try await DatabaseManager.shared.fetchAllActivities()
+            let activities = try await DatabaseManager.shared.fetchActivities(for: self.company.name)
             var activ: [AppActivity] = []
             for activity in activities {
                 let photoData = try await StorageManager.shared.fetchActivityPhoto(for: activity.uid)
@@ -39,6 +52,12 @@ class MainVC: UIViewController {
             updateData(on: self.activities)
         }
     }
+    
+    private func configureNavItems() {
+        view.backgroundColor = .systemBackground
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .done, target: self, action: #selector(plusPressed))
+    }
+    
     
     private func configureCollectionView() {
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: UIHelper.createOneColumnLayout(in: view))
@@ -66,10 +85,29 @@ class MainVC: UIViewController {
             self.dataSourse.apply(snapshot, animatingDifferences: true)
         }
     }
+    
+    
+    @objc func plusPressed() {
+        let destVC = AddActivityVC(company: company)
+        destVC.delegate = self
+        destVC.title = "Добавление активности"
+        let navController = UINavigationController(rootViewController: destVC)
+        navController.modalPresentationStyle = .popover
+        navController.isModalInPresentation = true
+        present(navController, animated: true)
+    }
 }
 
+extension BusinessActivitiesVC: ActivityDelegate {
+    func activityUploaded(activity: AppActivity) {
+        company.activities.append(activity.name)
+        activities.append(activity)
+        updateData(on: self.activities)
+    }
+}
 
-extension MainVC: UICollectionViewDelegate {
+extension BusinessActivitiesVC: UICollectionViewDelegate {
     
 }
+
 

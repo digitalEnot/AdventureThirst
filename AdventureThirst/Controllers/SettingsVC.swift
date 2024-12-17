@@ -47,6 +47,9 @@ class SettingsVC: UIViewController {
         configureTableView()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.setNavigationBarHidden(false, animated: false)
+    }
     
     private func configureTableView() {
         view.addSubview(settingsTable)

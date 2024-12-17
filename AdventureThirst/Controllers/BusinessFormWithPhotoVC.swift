@@ -70,8 +70,9 @@ class BusinessFormWithPhotoVC: UIViewController {
     private func configure() {
         view.addSubview(photoView)
         photoView.translatesAutoresizingMaskIntoConstraints = false
-        photoView.layer.cornerRadius = 50
+        photoView.layer.cornerRadius = 10
         photoView.layer.masksToBounds = true
+        photoView.contentMode = .scaleAspectFill
         photoView.image = UIImage(named: "profile")
         
         view.addSubview(imagePickerButton)
@@ -144,7 +145,6 @@ class BusinessFormWithPhotoVC: UIViewController {
             self.spinner.spinner.startAnimating()
             Task {
                 if let photoData = image.jpegData(compressionQuality: 0.5) {
-                    print(photoData)
                     do {
                         try await StorageManager.shared.uploadCompanyPhoto(for: self.orgPhoneNumber, photoData: photoData)
                         self.photoView.image = image

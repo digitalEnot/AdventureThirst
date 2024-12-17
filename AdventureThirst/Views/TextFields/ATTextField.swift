@@ -18,10 +18,13 @@ class ATTextField: UITextField {
     
     convenience init(placeholder: String, background: UIColor, border: UIColor) {
         self.init(placeholder: placeholder)
-        layer.borderColor = border.cgColor
-        layer.backgroundColor = background.cgColor
-        attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [NSAttributedString.Key.foregroundColor: border])
-
+//        layer.borderColor = border.cgColor
+//        layer.backgroundColor = background.cgColor
+//        attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [NSAttributedString.Key.foregroundColor: border])
+        
+        layer.borderColor = UIColor(.black).cgColor
+        layer.backgroundColor = UIColor(.white).cgColor
+        attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [NSAttributedString.Key.foregroundColor: UIColor(.gray)])
     }
     
     required init?(coder: NSCoder) {

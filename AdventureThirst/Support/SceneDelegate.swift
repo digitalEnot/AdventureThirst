@@ -80,7 +80,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     window?.rootViewController = navCont
                     
                     // Print appCompanies after it's populated
-                    print(appCompanies)
                 } catch {
                     print("Error: \(error)")
                 }

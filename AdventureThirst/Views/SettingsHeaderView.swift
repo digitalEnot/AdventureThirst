@@ -91,9 +91,7 @@ class SettingsHeaderView: UIView {
             businessView.topAnchor.constraint(equalTo: userName.bottomAnchor, constant: 25),
             businessView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15),
             businessView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15),
-            businessView.heightAnchor.constraint(equalToConstant: 96),
-//            businessView.widthAnchor.constraint(equalToConstant: 450),
-//            businessView.centerXAnchor.constraint(equalTo: centerXAnchor)
+            businessView.heightAnchor.constraint(equalToConstant: 96)
         ])
     }
     

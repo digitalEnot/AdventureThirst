@@ -38,13 +38,31 @@ class StorageManager {
     
     func uploadCompanyPhoto(for companyPhone: String, photoData: Data) async throws {
         do {
-            _ = try await storage.from("company_image").upload("\(companyPhone)/company_photo.jpg", data: photoData, options: FileOptions(cacheControl: "2400"))
+            _ = try await storage.from("company_image").list(path: "\(companyPhone)")
+            _ = try await storage.from("company_image").update("\(companyPhone)/company_photo.jpg", data: photoData, options: FileOptions(cacheControl: "2400"))
         } catch {
-            throw URLError(.badServerResponse)
+            _ = try await storage.from("company_image").upload("\(companyPhone)/company_photo.jpg", data: photoData, options: FileOptions(cacheControl: "2400"))
         }
     }
     
     func fetchCompanyPhoto(for companyPhone: String) async throws -> Data {
         return try await storage.from("company_image").download(path:"\(companyPhone)/company_photo.jpg")
     }
+    
+    
+    
+    func uploadActivityPhoto(for uid: String, photoData: Data) async throws {
+        print(uid)
+        do {
+            _ = try await storage.from("activity_image").list(path: "\(uid)")
+            _ = try await storage.from("activity_image").update("\(uid)/activity_photo.jpg", data: photoData, options: FileOptions(cacheControl: "2400"))
+        } catch {
+            _ = try await storage.from("activity_image").upload("\(uid)/activity_photo.jpg", data: photoData, options: FileOptions(cacheControl: "2400"))
+        }
+    }
+    
+    func fetchActivityPhoto(for uid: String) async throws -> Data {
+        return try await storage.from("activity_image").download(path:"\(uid)/activity_photo.jpg")
+    }
+    
 }

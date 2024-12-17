@@ -24,7 +24,7 @@ class BusinessTabBarController: UITabBarController {
         super.viewDidLoad()
         UITabBar.appearance().tintColor = .blue
         UITabBar.appearance().backgroundColor = UIColor.systemGray6
-        viewControllers = [createActivitiesListNC(), /*createSettingsNC()*/]
+        viewControllers = [createBusinessActivitiesListNC(), createBusinessSettingsNC()]
         configureNavItems()
     }
     
@@ -38,21 +38,21 @@ class BusinessTabBarController: UITabBarController {
         navigationItem.hidesBackButton = true
     }
     
-    private func createActivitiesListNC() -> UINavigationController {
-        let cocktailsListVC = BusinessActivitiesVC(company: company)
-        cocktailsListVC.delegate = self
-        cocktailsListVC.title = "Ваши Активности"
-        cocktailsListVC.tabBarItem = UITabBarItem(title: "Ваши Активности", image: UIImage(systemName: "figure.surfing"), tag: 0)
-        return UINavigationController(rootViewController: cocktailsListVC)
+    private func createBusinessActivitiesListNC() -> UINavigationController {
+        let businessActivitiesVC = BusinessActivitiesVC(company: company)
+        businessActivitiesVC.title = "Ваши Активности"
+        businessActivitiesVC.tabBarItem = UITabBarItem(title: "Ваши Активности", image: UIImage(systemName: "figure.surfing"), tag: 0)
+        return UINavigationController(rootViewController: businessActivitiesVC)
     }
     
     
-//    private func createSettingsNC() -> UINavigationController {
-////        let favoritesCocktailsVC = SettingsVC(userData: userData)
-//        favoritesCocktailsVC.title = "Настройки"
-//        favoritesCocktailsVC.tabBarItem = UITabBarItem(title: "Настройки", image: UIImage(systemName: "gear"), tag: 1)
-//        return UINavigationController(rootViewController: favoritesCocktailsVC)
-//    }
+    private func createBusinessSettingsNC() -> UINavigationController {
+        let createBusinessSettingsNC = BusinessSettigsVC(company: company)
+        createBusinessSettingsNC.delegate = self
+        createBusinessSettingsNC.title = "Настройки"
+        createBusinessSettingsNC.tabBarItem = UITabBarItem(title: "Настройки", image: UIImage(systemName: "gear"), tag: 1)
+        return UINavigationController(rootViewController: createBusinessSettingsNC)
+    }
 
 }
 

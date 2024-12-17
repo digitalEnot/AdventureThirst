@@ -70,6 +70,7 @@ class PersonalInfoVC: UIViewController {
         photoView.translatesAutoresizingMaskIntoConstraints = false
         photoView.layer.cornerRadius = 50
         photoView.layer.masksToBounds = true
+        photoView.contentMode = .scaleAspectFill
         photoView.image = UIImage(named: "profile")
         
         view.addSubview(imagePickerButton)
@@ -121,7 +122,6 @@ class PersonalInfoVC: UIViewController {
             self.spinner.spinner.startAnimating()
             Task {
                 if let photoData = image.jpegData(compressionQuality: 0.5) {
-                    print(photoData)
                     do {
                         try await StorageManager.shared.uploadProfilePhoto(for: self.appUser, photoData: photoData)
                         self.photoView.image = image

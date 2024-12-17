@@ -7,12 +7,12 @@
 
 import Foundation
 
-struct AppCompany {
+struct AppCompany: Codable {
     let name: String
     let description: String
     let photo: Data
     let address: String
-    let activities: [Int]
+    var activities: [String]
     let phoneNumber: String
     let openHours: String
     let userUid: String
@@ -23,7 +23,7 @@ struct Company: Codable {
     let name: String
     let description: String
     let address: String
-    let activities: [Int]
+    let activities: [String]
     let phoneNumber: String
     let openHours: String
     let userUid: String
@@ -33,7 +33,7 @@ struct CompanyPayLoad: Codable {
     let name: String
     let description: String
     let address: String
-    let activities: [Int]
+    let activities: [String]
     let phoneNumber: String
     let openHours: String
     let userUid: String
@@ -48,8 +48,3 @@ struct CompanyPayLoad: Codable {
         case userUid = "user_uid"
     }
 }
-
-//struct Activities: Codable {
-//    let name: String
-//    let description: String
-//}
