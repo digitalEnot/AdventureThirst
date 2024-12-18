@@ -9,7 +9,7 @@ import UIKit
 
 enum FilterOption: String {
     case price = "По цене"
-    case raiting = "По рейтигу"
+    case rating = "По рейтигу"
     case duration = "По продолжительности"
 }
 
@@ -19,6 +19,8 @@ enum SecondSection {
 
 class MainVC: UIViewController {
     var activities: [AppActivity] = []
+    var searchedActivities: [AppActivity] = []
+    var isSearching = false
     var filteredActivities: [AppActivity] = []
     var dataSourse: UICollectionViewDiffableDataSource<Section, AppActivity>!
     var collectionView: UICollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout())
@@ -57,7 +59,7 @@ class MainVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationController?.setNavigationBarHidden(true, animated: false)
+        fetchActivities()
         configureCategoriesCollectionView()
         configureCollectionView()
         configureDataSourse()
@@ -66,7 +68,7 @@ class MainVC: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        fetchActivities()
+        navigationController?.setNavigationBarHidden(true, animated: false)
     }
     
     private func configureCategoriesCollectionView() {
@@ -89,6 +91,7 @@ class MainVC: UIViewController {
         imageForFilters.translatesAutoresizingMaskIntoConstraints = false
         imageForFilters.image = UIImage(systemName: "slider.horizontal.3")
         imageForFilters.tintColor = .black
+        search.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
         
         let gesture = UITapGestureRecognizer(target: self, action: #selector(filterTapped))
         filters.addGestureRecognizer(gesture)
@@ -128,7 +131,7 @@ class MainVC: UIViewController {
             var activ: [AppActivity] = []
             for activity in activities {
                 let photoData = try await StorageManager.shared.fetchActivityPhoto(for: activity.uid)
-                let appActivity = AppActivity(name: activity.name, location: activity.location, description: activity.description, price: activity.price, duration: activity.duration, activityCategory: activity.activityCategory, photo: UIImage(data: photoData)!, companyName: activity.companyName, uid: activity.uid)
+                let appActivity = AppActivity(name: activity.name, location: activity.location, description: activity.description, price: activity.price, duration: activity.duration, activityCategory: activity.activityCategory, photo: UIImage(data: photoData)!, companyName: activity.companyName, uid: activity.uid, rating: activity.rating)
                 activ.append(appActivity)
             }
             print(activ)
@@ -161,6 +164,7 @@ class MainVC: UIViewController {
         if selectedCategory != nil {
             filteredActivities = activities.filter { $0.activityCategory == selectedCategory?.name?.rawValue }
         }
+        filteredActivities = applyFilters(activities: filteredActivities, filterOption: selectedFilterOption)
         
         var snapshot = NSDiffableDataSourceSnapshot<Section, AppActivity>()
         snapshot.appendSections([.main])
@@ -183,6 +187,35 @@ class MainVC: UIViewController {
             sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = true
         }
         present(filterVC, animated: true, completion: nil)
+    }
+    
+    @objc func textFieldDidChange() {
+        guard let filter = search.text, filter != "" else {
+            searchedActivities.removeAll()
+            isSearching = false
+            updateData(on: activities)
+            return
+        }
+        
+        isSearching = true
+        searchedActivities = activities.filter { $0.name.lowercased().contains(filter.lowercased())}
+        updateData(on: searchedActivities)
+    }
+    
+    func applyFilters(activities: [AppActivity], filterOption: FilterOption?) -> [AppActivity] {
+        switch filterOption {
+        case .price:
+            let activities = activities.sorted { $0.price < $1.price }
+            return activities
+        case .rating:
+            let activities = activities.sorted { $0.rating > $1.rating }
+            return activities
+        case .duration:
+            let activities = activities.sorted { $0.duration > $1.duration }
+            return activities
+        case .none:
+            return activities
+        }
     }
 }
 
@@ -215,16 +248,33 @@ extension MainVC: UICollectionViewDelegate, UICollectionViewDataSource {
             guard let choosenCell = collectionView.cellForItem(at: indexPath) as? ActivityCategoryCell else { return }
             if categories[indexPath.row].name?.rawValue == selectedCategory?.name?.rawValue {
                 selectedCategory = nil
-                updateData(on: activities)
+                let searchBarText = search.text ?? ""
+                searchedActivities = activities.filter { $0.name.lowercased().contains(searchBarText.lowercased()) }
+                updateData(on: isSearching ? searchedActivities : activities)
                 return
             }
             choosenCell.image.tintColor = .black
             choosenCell.label.textColor = .black
             
             selectedCategory = categories[indexPath.row]
-            updateData(on: activities)
+            let searchBarText = search.text ?? ""
+            searchedActivities = activities.filter { $0.name.lowercased().contains(searchBarText.lowercased()) }
+            updateData(on: isSearching ? searchedActivities : activities)
         } else {
+            let activeArray = isSearching ? searchedActivities : activities
             
+            //
+            var filteredActivities = activeArray
+            if selectedCategory != nil {
+                filteredActivities = activeArray.filter { $0.activityCategory == selectedCategory?.name?.rawValue }
+            }
+            filteredActivities = applyFilters(activities: filteredActivities, filterOption: selectedFilterOption)
+            //
+            
+            let activity = filteredActivities[indexPath.item]
+            let destVC = ActivityCardVC(activity: activity)
+            destVC.hidesBottomBarWhenPushed = true
+            navigationController?.pushViewController(destVC, animated: true)
         }
     }
 }
@@ -239,8 +289,9 @@ extension MainVC: FilterDelegate {
             imageForFilters.tintColor = .black
         }
         
-        
-        print(selectedFilterOption?.rawValue)
         self.selectedFilterOption = selectedFilterOption
+        let searchBarText = search.text ?? ""
+        searchedActivities = activities.filter { $0.name.lowercased().contains(searchBarText.lowercased()) }
+        updateData(on: isSearching ? searchedActivities : activities)
     }
 }

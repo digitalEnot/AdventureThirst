@@ -11,12 +11,13 @@ struct AppActivity: Hashable {
     let name: String
     let location: String
     let description: String
-    let price: String
-    let duration: String
+    let price: Int
+    let duration: Int
     let activityCategory: String
     let photo: UIImage
     let companyName: String
     let uid: String
+    let rating: Double
 }
 
 struct Activity: Codable {
@@ -24,11 +25,12 @@ struct Activity: Codable {
     let name: String
     let location: String
     let description: String
-    let price: String
-    let duration: String
+    let price: Int
+    let duration: Int
     let activityCategory: String
     let companyName: String
     let uid: String
+    let rating: Double
 }
 
 
@@ -36,11 +38,12 @@ struct ActivityPayLoad: Codable {
     let name: String
     let location: String
     let description: String
-    let price: String
-    let duration: String
+    let price: Int
+    let duration: Int
     let activityCategory: String
     let companyName: String
     let uid: String
+    let rating: Double
     
     enum CodingKeys: String, CodingKey {
         case name
@@ -51,5 +54,6 @@ struct ActivityPayLoad: Codable {
         case activityCategory = "activity_category"
         case companyName = "company_name"
         case uid
+        case rating
     }
 }

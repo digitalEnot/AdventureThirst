@@ -45,7 +45,7 @@ class BusinessActivitiesVC: UIViewController {
             var activ: [AppActivity] = []
             for activity in activities {
                 let photoData = try await StorageManager.shared.fetchActivityPhoto(for: activity.uid)
-                let appActivity = AppActivity(name: activity.name, location: activity.location, description: activity.description, price: activity.price, duration: activity.duration, activityCategory: activity.activityCategory, photo: UIImage(data: photoData)!, companyName: activity.companyName, uid: activity.uid)
+                let appActivity = AppActivity(name: activity.name, location: activity.location, description: activity.description, price: activity.price, duration: activity.duration, activityCategory: activity.activityCategory, photo: UIImage(data: photoData)!, companyName: activity.companyName, uid: activity.uid, rating: activity.rating)
                 activ.append(appActivity)
             }
             self.activities = activ

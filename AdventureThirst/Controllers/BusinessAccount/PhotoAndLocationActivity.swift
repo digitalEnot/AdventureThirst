@@ -154,9 +154,9 @@ class PhotoAndLocationActivity: UIViewController {
     @objc func buttonPressed() {
         Task {
             do {
-                let activity = ActivityPayLoad(name: activityName, location: activityLocationTextField.text!, description: activityDescription, price: activityPrice, duration: activityDuration, activityCategory: selectedCategory, companyName: company.name, uid: uniqueID)
+                let activity = ActivityPayLoad(name: activityName, location: activityLocationTextField.text!, description: activityDescription, price: Int(activityPrice) ?? 0, duration: Int(activityDuration) ?? 0, activityCategory: selectedCategory, companyName: company.name, uid: uniqueID, rating: 0.0)
                 let photo = photoView.image
-                let appActivity = AppActivity(name: activityName, location: activityLocationTextField.text!, description: activityDescription, price: activityPrice, duration: activityDuration, activityCategory: selectedCategory, photo: photo ?? UIImage(named: "profile")!, companyName: company.name, uid: uniqueID)
+                let appActivity = AppActivity(name: activityName, location: activityLocationTextField.text!, description: activityDescription, price: Int(activityPrice) ?? 0, duration: Int(activityDuration) ?? 0, activityCategory: selectedCategory, photo: photo ?? UIImage(named: "profile")!, companyName: company.name, uid: uniqueID, rating: 0.0)
                 var activities = company.activities
                 activities.append(activity.name)
                 let companyPayLoad = CompanyPayLoad(name: company.name, description: company.description, address: company.address, activities: activities, phoneNumber: company.phoneNumber, openHours: company.openHours, userUid: company.userUid)
