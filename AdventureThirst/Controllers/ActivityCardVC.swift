@@ -34,9 +34,6 @@ class ActivityCardVC: UIViewController {
         view.addSubview(name)
         name.center = view.center
         name.text = activity.name
-//        name.numberOfLines = 3
         name.textAlignment = .center
     }
-    
-    
 }

@@ -42,6 +42,7 @@ class MainVC: UIViewController {
         ATCategory(name: ActivityNames.curling, icon: UIImage(systemName: "figure.curling")),
         ATCategory(name: ActivityNames.climbing, icon: UIImage(named: "climbing")?.withRenderingMode(.alwaysTemplate)),
         ATCategory(name: ActivityNames.diving, icon: UIImage(named: "diving")?.withRenderingMode(.alwaysTemplate)),
+        ATCategory(name: ActivityNames.wake, icon: UIImage(named: "wake")?.withRenderingMode(.alwaysTemplate)),
         ATCategory(name: ActivityNames.other, icon: UIImage(systemName: "oar.2.crossed"))
     ]
     var selectedCategory: ATCategory? = nil
@@ -144,7 +145,7 @@ class MainVC: UIViewController {
                 let appActivity = AppActivity(name: activity.name, location: activity.location, description: activity.description, price: activity.price, duration: activity.duration, activityCategory: activity.activityCategory, photo: UIImage(data: photoData)!, companyName: activity.companyName, uid: activity.uid, rating: activity.rating)
                 activ.append(appActivity)
             }
-            print(activ)
+//            print(activ)
             self.activities = activ
             updateData(on: self.activities)
         }

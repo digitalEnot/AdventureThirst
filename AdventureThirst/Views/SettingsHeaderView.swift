@@ -49,6 +49,7 @@ class SettingsHeaderView: UIView {
         photoView.translatesAutoresizingMaskIntoConstraints = false
         photoView.layer.cornerRadius = 50
         photoView.layer.masksToBounds = true
+        photoView.contentMode = .scaleAspectFill
         
         addSubview(userName)
 //        userName.text = "Евгений"

@@ -17,10 +17,16 @@ class SettingsVC: UIViewController {
     var userData: UserData?
     var companies: [AppCompany]
     var numberOfSections = 0
-    let sectionTitles = ["Настройки", "История", ""]
-    let buttonsInSettingsSection: [ButtonView] = [
+    let sectionTitles = ["Аккаунт", "Активности", ""]
+    let buttonsInAccountSection: [ButtonView] = [
         ButtonView(image: UIImage(systemName: "person.text.rectangle"), text: "Персональная информация", nextVC: nil),
-        ButtonView(image: UIImage(systemName: "creditcard"), text: "Способ оплаты", nextVC: nil)]
+        ButtonView(image: UIImage(systemName: "creditcard"), text: "Способ оплаты", nextVC: nil)
+    ]
+    
+    let buttonsInActivitiesSection: [ButtonView] = [
+        ButtonView(image: UIImage(systemName: "figure.badminton.circle"), text: "Записи", nextVC: nil),
+        ButtonView(image: UIImage(systemName: "heart"), text: "Понравившееся", nextVC: nil)
+    ]
     
     private let settingsTable: UITableView = {
         let table = UITableView(frame: .zero, style: .insetGrouped)
@@ -85,15 +91,15 @@ extension SettingsVC: UITableViewDelegate, UITableViewDataSource {
         
         if companies.count > 0 {
             if section == numberOfSections + 1 - 3 {
-                return buttonsInSettingsSection.count
-            } else if section == numberOfSections  + 1 - 2 {
+                return buttonsInAccountSection.count
+            } else if section == numberOfSections + 1 - 2 {
                 return 2
             } else {
                 return 1
             }
         } else {
             if section == numberOfSections - 3 {
-                return buttonsInSettingsSection.count
+                return buttonsInActivitiesSection.count
             } else if section == numberOfSections - 2 {
                 return 2
             } else {
@@ -125,11 +131,17 @@ extension SettingsVC: UITableViewDelegate, UITableViewDataSource {
             }
             cell.setCell(text: "Выйти из аккаунта", image: nil, textColor: .red, hasArrow: false)
             return cell
+        } else if indexPath.section == numOfSec - 3 {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: SettingsTableViewCell.identifier, for: indexPath) as? SettingsTableViewCell else {
+                return UITableViewCell()
+            }
+            cell.setCell(text: buttonsInAccountSection[indexPath.row].text, image: buttonsInAccountSection[indexPath.row].image, textColor: .black)
+            return cell
         } else {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: SettingsTableViewCell.identifier, for: indexPath) as? SettingsTableViewCell else {
                 return UITableViewCell()
             }
-            cell.setCell(text: buttonsInSettingsSection[indexPath.row].text, image: buttonsInSettingsSection[indexPath.row].image, textColor: .black)
+            cell.setCell(text: buttonsInActivitiesSection[indexPath.row].text, image: buttonsInActivitiesSection[indexPath.row].image, textColor: .black)
             return cell
         }
     }
@@ -137,6 +149,13 @@ extension SettingsVC: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let numOfSec = companies.count > 0 ? companies.count + sectionTitles.count + 1 : companies.count + sectionTitles.count
+//        var numOfRows = 0
+//        if companies.count > 0 {
+//            numOfRows = companies.count + 1 + buttonsInAccountSection.count + buttonsInActivitiesSection.count + 1
+//        } else {
+//            numOfRows = 1 + buttonsInAccountSection.count + buttonsInActivitiesSection.count + 1
+//        }
+        
         
         if indexPath.section <= companies.count - 1 {
             let company = companies[indexPath.section]
@@ -160,7 +179,16 @@ extension SettingsVC: UITableViewDelegate, UITableViewDataSource {
             }
         } else if indexPath.section == companies.count && companies.count > 0 {
             showAddBusinessVC()
-        
+        } else if indexPath.section == numOfSec - 2 {
+            if indexPath.row == 0 {
+                
+            } else if indexPath.row == 1 {
+                let destVC = LikedActivitiesVC(userData: userData ?? nil)
+                navigationController?.pushViewController(destVC, animated: true)
+            }
+        } else if indexPath.section == numOfSec - 3 {
+            guard let destVC = buttonsInAccountSection[indexPath.row].nextVC else { return }
+            navigationController?.pushViewController(destVC, animated: true)
         }
     
         tableView.deselectRow(at: indexPath, animated: true)

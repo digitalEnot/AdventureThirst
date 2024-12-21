@@ -82,6 +82,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     
                     // Print appCompanies after it's populated
                 } catch {
+                    window?.rootViewController = UINavigationController(rootViewController: auth)
                     print("Error: \(error)")
                 }
 

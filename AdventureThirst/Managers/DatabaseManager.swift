@@ -80,5 +80,18 @@ class DatabaseManager {
     func updateLikes(likes: [String], for uid: String) async throws {
        let _ = try await client.from("personall").update(["liked_activities" : likes]).eq("user_uid", value: uid).execute()
     }
+    
+    func fetchActvity(for uid: String) async throws -> [Activity] {
+        let response = try await client.from("activities").select().equals("uid", value: uid).execute()
+        let data = response.data
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        do {
+            let activities = try decoder.decode([Activity].self, from: data)
+            return activities
+        } catch{
+            throw error
+        }
+    }
 }
 

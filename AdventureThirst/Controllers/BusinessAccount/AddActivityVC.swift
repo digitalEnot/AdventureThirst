@@ -24,6 +24,7 @@ enum ActivityNames: String {
     case curling = "Кёрлинг"
     case climbing = "Скалолазание"
     case diving = "Дайвинг"
+    case wake = "Вейксерфинг"
     case other = "Другое"
 }
 
@@ -41,6 +42,7 @@ class AddActivityVC: UIViewController {
         ATCategory(name: ActivityNames.curling, icon: UIImage(systemName: "figure.curling")),
         ATCategory(name: ActivityNames.climbing, icon: UIImage(named: "climbing")?.withRenderingMode(.alwaysTemplate)),
         ATCategory(name: ActivityNames.diving, icon: UIImage(named: "diving")?.withRenderingMode(.alwaysTemplate)),
+        ATCategory(name: ActivityNames.wake, icon: UIImage(named: "wake")?.withRenderingMode(.alwaysTemplate)),
         ATCategory(name: ActivityNames.other, icon: UIImage(systemName: "oar.2.crossed"))
     ]
     let company: AppCompany
