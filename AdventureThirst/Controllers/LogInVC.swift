@@ -136,7 +136,8 @@ class LogInVC: UIViewController {
                     name: userPersonalInfo[0].name,
                     lastName: userPersonalInfo[0].lastName,
                     middleName: userPersonalInfo[0].middleName,
-                    photoData: userPhoto
+                    photoData: userPhoto,
+                    likedActivities: userPersonalInfo[0].likedActivities
                 )
                 
                 let companies = try await DatabaseManager.shared.fetchCompany(for: user.uid)

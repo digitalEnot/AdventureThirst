@@ -48,7 +48,7 @@ class DatabaseManager {
     
     func createActivity(item: ActivityPayLoad, company: CompanyPayLoad) async throws {
         let _ = try await client.from("activities").insert(item).execute()
-        let _ = try await client.from("company").update(["activities": company.activities]).eq("name", value: company.name) .execute()
+        let _ = try await client.from("company").update(["activities": company.activities]).eq("name", value: company.name).execute()
     }
     
     func fetchActivities(for companyName: String) async throws -> [Activity] {
@@ -75,6 +75,10 @@ class DatabaseManager {
         } catch{
             throw error
         }
+    }
+    
+    func updateLikes(likes: [String], for uid: String) async throws {
+       let _ = try await client.from("personall").update(["liked_activities" : likes]).eq("user_uid", value: uid).execute()
     }
 }
 

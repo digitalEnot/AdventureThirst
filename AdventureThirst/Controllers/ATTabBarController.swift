@@ -41,7 +41,7 @@ class ATTabBarController: UITabBarController {
     }
     
     private func createActivitiesListNC() -> UINavigationController {
-        let cocktailsListVC = MainVC()
+        let cocktailsListVC = MainVC(userData: userData)
         cocktailsListVC.title = "Активности"
         cocktailsListVC.tabBarItem = UITabBarItem(title: "Активности", image: UIImage(systemName: "figure.surfing"), tag: 0)
         return UINavigationController(rootViewController: cocktailsListVC)

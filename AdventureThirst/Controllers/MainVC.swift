@@ -18,6 +18,7 @@ enum SecondSection {
 }
 
 class MainVC: UIViewController {
+    var userData: UserData
     var activities: [AppActivity] = []
     var searchedActivities: [AppActivity] = []
     var isSearching = false
@@ -56,6 +57,14 @@ class MainVC: UIViewController {
     }()
     
 
+    init(userData: UserData) {
+        self.userData = userData
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,6 +74,7 @@ class MainVC: UIViewController {
         configureDataSourse()
         configure()
         configureConstants()
+//        ActivityCell.delegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -151,9 +161,18 @@ class MainVC: UIViewController {
     
     
     private func configureDataSourse() {
-        dataSourse = UICollectionViewDiffableDataSource<Section, AppActivity>(collectionView: collectionView, cellProvider: { collectionView, indexPath, activity in
+        dataSourse = UICollectionViewDiffableDataSource<Section, AppActivity>(collectionView: collectionView, cellProvider: { [weak self] collectionView, indexPath, activity in
+            guard let self = self else { return UICollectionViewCell() }
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ActivityCell.reuseID, for: indexPath) as! ActivityCell
             cell.set(activity: activity)
+            if self.userData.likedActivities.contains(activity.uid) {
+                cell.setIconToLiked()
+                cell.isLiked(true)
+            } else {
+                cell.setIconToDefault()
+                cell.isLiked(false)
+            }
+            cell.delegate = self
             return cell
         })
     }
@@ -295,3 +314,27 @@ extension MainVC: FilterDelegate {
         updateData(on: isSearching ? searchedActivities : activities)
     }
 }
+
+
+extension MainVC: ActivityCellDelegate {
+    func DidPressedLike(id: String) {
+        userData.likedActivities.append(id)
+        Task {
+            try await DatabaseManager.shared.updateLikes(likes: userData.likedActivities, for: userData.uid)
+        }
+    }
+    
+    func didPressedUnLike(id: String) {
+        if let index = userData.likedActivities.firstIndex(of: id) {
+            userData.likedActivities.remove(at: index)
+            
+            Task {
+                try await DatabaseManager.shared.updateLikes(likes: userData.likedActivities, for: userData.uid)
+                print("Like removed")
+            }
+        }
+        
+    }
+}
+
+

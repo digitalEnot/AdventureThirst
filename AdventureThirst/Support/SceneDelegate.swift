@@ -74,7 +74,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                         name: personalInfo[0].name,
                         lastName: personalInfo[0].lastName,
                         middleName: personalInfo[0].middleName,
-                        photoData: profilePhotoData
+                        photoData: profilePhotoData,
+                        likedActivities: personalInfo[0].likedActivities
                     )
                     navCont.pushViewController(ATTabBarController(userData: userData, appCompanies: appCompanies), animated: false)
                     window?.rootViewController = navCont

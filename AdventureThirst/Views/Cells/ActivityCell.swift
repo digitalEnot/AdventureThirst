@@ -7,6 +7,11 @@
 
 import UIKit
 
+protocol ActivityCellDelegate: AnyObject {
+    func DidPressedLike(id: String)
+    func didPressedUnLike(id: String)
+}
+
 class ActivityCell: UICollectionViewCell {
     static let reuseID = "ActivityCell"
     
@@ -17,6 +22,12 @@ class ActivityCell: UICollectionViewCell {
     let duration = UILabel()
     let rating = UILabel()
     let ratingIcon = UIImageView()
+    let likeButton = UIButton()
+    var isLiked = false
+    let likeIconConfiguration = UIImage.SymbolConfiguration(pointSize: 26, weight: .medium)
+    var activityId: String?
+    
+    weak var delegate: ActivityCellDelegate?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -36,6 +47,16 @@ class ActivityCell: UICollectionViewCell {
         price.text = String(activity.price) + " ₽"
         duration.text = String(activity.duration) + " минут"
         rating.text = String(activity.rating)
+        activityId = activity.uid
+    }
+    
+    func isLiked(_ isLiked: Bool) {
+        self.isLiked = isLiked
+        if isLiked {
+            setIconToLiked()
+        } else {
+            setIconToDefault()
+        }
     }
     
     
@@ -47,6 +68,7 @@ class ActivityCell: UICollectionViewCell {
         addSubview(duration)
         addSubview(rating)
         addSubview(ratingIcon)
+        addSubview(likeButton)
         
         photo.translatesAutoresizingMaskIntoConstraints = false
         name.translatesAutoresizingMaskIntoConstraints = false
@@ -55,6 +77,7 @@ class ActivityCell: UICollectionViewCell {
         duration.translatesAutoresizingMaskIntoConstraints = false
         rating.translatesAutoresizingMaskIntoConstraints = false
         ratingIcon.translatesAutoresizingMaskIntoConstraints = false
+        likeButton.translatesAutoresizingMaskIntoConstraints = false
         
         photo.contentMode = .scaleAspectFill
         photo.layer.cornerRadius = 10
@@ -74,6 +97,11 @@ class ActivityCell: UICollectionViewCell {
         let configuration = UIImage.SymbolConfiguration(pointSize: 13, weight: .medium)
         ratingIcon.image = UIImage(systemName: "star.fill", withConfiguration: configuration)
         ratingIcon.tintColor = .black
+        
+        likeButton.addTarget(self, action: #selector(likePressed), for: .touchUpInside)
+        likeButton.setImage(UIImage(systemName: "heart", withConfiguration: likeIconConfiguration), for: .normal)
+        likeButton.imageView?.tintColor = .white
+        
         
         NSLayoutConstraint.activate([
             photo.topAnchor.constraint(equalTo: topAnchor),
@@ -98,6 +126,33 @@ class ActivityCell: UICollectionViewCell {
             
             rating.centerYAnchor.constraint(equalTo: ratingIcon.centerYAnchor),
             rating.trailingAnchor.constraint(equalTo: trailingAnchor),
+            
+            likeButton.topAnchor.constraint(equalTo: photo.topAnchor, constant: 20),
+            likeButton.trailingAnchor.constraint(equalTo: photo.trailingAnchor, constant: -20),
         ])
+    }
+    
+    func setIconToDefault() {
+        likeButton.setImage(UIImage(systemName: "heart", withConfiguration: likeIconConfiguration), for: .normal)
+        likeButton.imageView?.tintColor = .white
+    }
+    
+    func setIconToLiked() {
+        likeButton.setImage(UIImage(systemName: "heart.fill", withConfiguration: likeIconConfiguration), for: .normal)
+        likeButton.imageView?.tintColor = .red
+    }
+    
+    @objc func likePressed() {
+        
+        isLiked.toggle()
+        print("fuck this")
+        
+        if isLiked {
+            setIconToLiked()
+            delegate?.DidPressedLike(id: activityId!)
+        } else {
+            setIconToDefault()
+            delegate?.didPressedUnLike(id: activityId!)
+        }
     }
 }

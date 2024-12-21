@@ -14,6 +14,7 @@ struct UserData: Codable {
     let lastName: String
     let middleName: String?
     let photoData: Data
+    var likedActivities: [String]
 }
 
 
@@ -24,6 +25,7 @@ struct userData: Codable {
     let lastName: String
     let middleName: String
     let userUid: String
+    var likedActivities: [String]
 }
 
 struct PersonalInfoPayload: Codable {
@@ -31,11 +33,13 @@ struct PersonalInfoPayload: Codable {
     let lastName: String
     let middleName: String
     let userUid: String
+    var likedActivities: [String]
     
     enum CodingKeys: String, CodingKey {
         case name = "name"
         case lastName = "last_name"
         case middleName = "middle_name"
         case userUid = "user_uid"
+        case likedActivities = "liked_activities"
     }
 }
