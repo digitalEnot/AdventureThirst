@@ -11,10 +11,14 @@ class ATTabBarController: UITabBarController {
     
     let userData: UserData
     let companies: [AppCompany]
+    var cocktailsListVC = UIViewController()
+    var favoritesCocktailsVC = UIViewController()
     
     init(userData: UserData, appCompanies: [AppCompany]) {
         self.userData = userData
         self.companies = appCompanies
+        cocktailsListVC = MainVC(userData: userData)
+        favoritesCocktailsVC = SettingsVC(userData: userData, companies: companies)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -41,7 +45,6 @@ class ATTabBarController: UITabBarController {
     }
     
     private func createActivitiesListNC() -> UINavigationController {
-        let cocktailsListVC = MainVC(userData: userData)
         cocktailsListVC.title = "Активности"
         cocktailsListVC.tabBarItem = UITabBarItem(title: "Активности", image: UIImage(systemName: "figure.surfing"), tag: 0)
         return UINavigationController(rootViewController: cocktailsListVC)
@@ -49,10 +52,20 @@ class ATTabBarController: UITabBarController {
     
     
     private func createSettingsNC() -> UINavigationController {
-        let favoritesCocktailsVC = SettingsVC(userData: userData, companies: companies)
+        if let settings = favoritesCocktailsVC as? SettingsVC {
+            settings.delegate = self
+        }
         favoritesCocktailsVC.title = "Настройки"
         favoritesCocktailsVC.tabBarItem = UITabBarItem(title: "Настройки", image: UIImage(systemName: "gear"), tag: 1)
         return UINavigationController(rootViewController: favoritesCocktailsVC)
     }
     
+}
+
+extension ATTabBarController: hhaha {
+    func didSomethng(array: [String]) {
+        guard let main = cocktailsListVC as? MainVC else { return }
+        main.userData.likedActivities = array
+        main.collectionView.reloadData()
+    }
 }

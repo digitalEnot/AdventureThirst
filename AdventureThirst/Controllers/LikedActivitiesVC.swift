@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol hhaha: AnyObject {
+    func didSomethng(array: [String])
+}
+
 enum Ssection {
     case main
 }
@@ -17,6 +21,8 @@ class LikedActivitiesVC: UIViewController {
     var likedActivities: [AppActivity] = []
     var collectionView: UICollectionView!
     var dataSourse: UICollectionViewDiffableDataSource<Section, AppActivity>!
+    
+    weak var delegate: hhaha?
     
     init(userData: UserData?) {
         self.userData = userData ?? UserData(uid: "", email: "", name: "", lastName: "", middleName: "", photoData: Data(), likedActivities: [])
@@ -29,22 +35,28 @@ class LikedActivitiesVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        fetchLikes()
+        
         configure()
         configureCollectionView()
         configureDataSourse()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        fetchLikes()
+    }
+    
     private func fetchLikes() {
         Task {
             let userData = try await DatabaseManager.shared.fetchToDoItems(for: userData.uid)
+            var activityArr: [AppActivity] = []
             for activityId in userData[0].likedActivities {
                 let ativ = try await DatabaseManager.shared.fetchActvity(for: activityId)
                 let activity = ativ[0]
                 let photo = try await StorageManager.shared.fetchActivityPhoto(for: activityId)
                 let appActivity = AppActivity(name: activity.name, location: activity.location, description: activity.description, price: activity.price, duration: activity.duration, activityCategory: activity.activityCategory, photo: UIImage(data: photo)!, companyName: activity.companyName, uid: activity.uid, rating: activity.rating)
-                likedActivities.append(appActivity)
+                activityArr.append(appActivity)
             }
+            likedActivities = activityArr
             updateData(on: likedActivities)
         }
     }
@@ -95,6 +107,7 @@ extension LikedActivitiesVC: UnlikeDelegate {
                 userData.likedActivities.remove(at: index2)
             }
             updateData(on: likedActivities)
+            delegate?.didSomethng(array: userData.likedActivities)
             
             
             Task {

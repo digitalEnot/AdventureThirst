@@ -146,7 +146,7 @@ class MainVC: UIViewController {
                 activ.append(appActivity)
             }
 //            print(activ)
-            self.activities = activ
+            self.activities = activ.shuffled()
             updateData(on: self.activities)
         }
     }
@@ -180,6 +180,7 @@ class MainVC: UIViewController {
     
     
     func updateData(on activities: [AppActivity]) {
+        print("gg")
         var filteredActivities = activities
         if selectedCategory != nil {
             filteredActivities = activities.filter { $0.activityCategory == selectedCategory?.name?.rawValue }
@@ -337,5 +338,3 @@ extension MainVC: ActivityCellDelegate {
         
     }
 }
-
-

@@ -28,6 +28,8 @@ class SettingsVC: UIViewController {
         ButtonView(image: UIImage(systemName: "heart"), text: "Понравившееся", nextVC: nil)
     ]
     
+    weak var delegate: hhaha?
+    
     private let settingsTable: UITableView = {
         let table = UITableView(frame: .zero, style: .insetGrouped)
         table.separatorStyle = .none
@@ -184,6 +186,7 @@ extension SettingsVC: UITableViewDelegate, UITableViewDataSource {
                 
             } else if indexPath.row == 1 {
                 let destVC = LikedActivitiesVC(userData: userData ?? nil)
+                destVC.delegate = delegate
                 navigationController?.pushViewController(destVC, animated: true)
             }
         } else if indexPath.section == numOfSec - 3 {
