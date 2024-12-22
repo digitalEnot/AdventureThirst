@@ -23,7 +23,7 @@ class LikedActivitiesCell: UICollectionViewCell {
     let ratingIcon = UIImageView()
     let likeButton = UIButton()
     var isLiked = false
-    let likeIconConfiguration = UIImage.SymbolConfiguration(pointSize: 26, weight: .medium)
+    let likeIconConfiguration = UIImage.SymbolConfiguration(pointSize: 20, weight: .medium)
     var activity: AppActivity?
     
     weak var delegate: UnlikeDelegate?
@@ -82,18 +82,21 @@ class LikedActivitiesCell: UICollectionViewCell {
         photo.layer.cornerRadius = 10
         photo.clipsToBounds = true
         
-        name.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        name.font = UIFont.systemFont(ofSize: 13, weight: .bold)
+        name.numberOfLines = 2
+        name.lineBreakMode = .byTruncatingTail
+        name.sizeToFit()
         
-        companyName.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+        companyName.font = UIFont.systemFont(ofSize: 11, weight: .medium)
         companyName.textColor = .gray
         
-        price.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        price.font = UIFont.systemFont(ofSize: 13, weight: .bold)
         
-        duration.font = UIFont.systemFont(ofSize: 15, weight: .regular)
+        duration.font = UIFont.systemFont(ofSize: 12, weight: .regular)
         
-        rating.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        rating.font = UIFont.systemFont(ofSize: 13, weight: .bold)
         
-        let configuration = UIImage.SymbolConfiguration(pointSize: 13, weight: .medium)
+        let configuration = UIImage.SymbolConfiguration(pointSize: 10, weight: .medium)
         ratingIcon.image = UIImage(systemName: "star.fill", withConfiguration: configuration)
         ratingIcon.tintColor = .black
         
@@ -106,10 +109,11 @@ class LikedActivitiesCell: UICollectionViewCell {
             photo.topAnchor.constraint(equalTo: topAnchor),
             photo.leadingAnchor.constraint(equalTo: leadingAnchor),
             photo.trailingAnchor.constraint(equalTo: trailingAnchor),
-            photo.heightAnchor.constraint(equalToConstant: 400),
+            photo.heightAnchor.constraint(equalToConstant: 200),
             
             name.topAnchor.constraint(equalTo: photo.bottomAnchor, constant: 10),
             name.leadingAnchor.constraint(equalTo: leadingAnchor),
+            name.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -35),
             
             companyName.topAnchor.constraint(equalTo: name.bottomAnchor, constant: 5),
             companyName.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -122,12 +126,14 @@ class LikedActivitiesCell: UICollectionViewCell {
             
             ratingIcon.topAnchor.constraint(equalTo: photo.bottomAnchor, constant: 10),
             ratingIcon.trailingAnchor.constraint(equalTo: rating.leadingAnchor, constant: -5),
+//            ratingIcon.heightAnchor.constraint(equalToConstant: 12),
+//            ratingIcon.widthAnchor.constraint(equalToConstant: 12),
             
             rating.centerYAnchor.constraint(equalTo: ratingIcon.centerYAnchor),
             rating.trailingAnchor.constraint(equalTo: trailingAnchor),
             
-            likeButton.topAnchor.constraint(equalTo: photo.topAnchor, constant: 20),
-            likeButton.trailingAnchor.constraint(equalTo: photo.trailingAnchor, constant: -20),
+            likeButton.topAnchor.constraint(equalTo: photo.topAnchor, constant: 15),
+            likeButton.trailingAnchor.constraint(equalTo: photo.trailingAnchor, constant: -15),
         ])
     }
     

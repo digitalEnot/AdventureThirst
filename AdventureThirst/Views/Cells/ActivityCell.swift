@@ -84,6 +84,9 @@ class ActivityCell: UICollectionViewCell {
         photo.clipsToBounds = true
         
         name.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        name.numberOfLines = 2
+        name.lineBreakMode = .byTruncatingTail
+        name.sizeToFit()
         
         companyName.font = UIFont.systemFont(ofSize: 14, weight: .medium)
         companyName.textColor = .gray
@@ -111,6 +114,7 @@ class ActivityCell: UICollectionViewCell {
             
             name.topAnchor.constraint(equalTo: photo.bottomAnchor, constant: 10),
             name.leadingAnchor.constraint(equalTo: leadingAnchor),
+            name.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -45),
             
             companyName.topAnchor.constraint(equalTo: name.bottomAnchor, constant: 5),
             companyName.leadingAnchor.constraint(equalTo: leadingAnchor),
