@@ -159,7 +159,7 @@ class PhotoAndLocationActivity: UIViewController {
                 let appActivity = AppActivity(name: activityName, location: activityLocationTextField.text!, description: activityDescription, price: Int(activityPrice) ?? 0, duration: Int(activityDuration) ?? 0, activityCategory: selectedCategory, photo: photo ?? UIImage(named: "profile")!, companyName: company.name, uid: uniqueID, rating: 0.0)
                 var activities = company.activities
                 activities.append(activity.name)
-                let companyPayLoad = CompanyPayLoad(name: company.name, description: company.description, address: company.address, activities: activities, phoneNumber: company.phoneNumber, openHours: company.openHours, userUid: company.userUid)
+                let companyPayLoad = CompanyPayLoad(name: company.name, description: company.description, address: company.address, activities: activities, phoneNumber: company.phoneNumber, openHours: company.openHours, userUid: company.userUid, bookedActivities: company.bookedActivities)
                 try await DatabaseManager.shared.createActivity(item: activity, company: companyPayLoad)
                 delegate?.activityUploaded(activity: appActivity)
                 dismiss(animated: true)
@@ -185,5 +185,5 @@ extension PhotoAndLocationActivity: UITextFieldDelegate {
 
 
 #Preview() {
-    PhotoAndLocationActivity(activityName: "", activityPrice: "", activityDuration: "", activityDescription: "", company: AppCompany(name: "", description: "", photo: Data(), address: "", activities: [], phoneNumber: "", openHours: "", userUid: ""), selectedCategory: "")
+    PhotoAndLocationActivity(activityName: "", activityPrice: "", activityDuration: "", activityDescription: "", company: AppCompany(name: "", description: "", photo: Data(), address: "", activities: [], phoneNumber: "", openHours: "", userUid: "", bookedActivities: []), selectedCategory: "")
 }

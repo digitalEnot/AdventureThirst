@@ -25,7 +25,7 @@ class LikedActivitiesVC: UIViewController {
     weak var delegate: hhaha?
     
     init(userData: UserData?) {
-        self.userData = userData ?? UserData(uid: "", email: "", name: "", lastName: "", middleName: "", photoData: Data(), likedActivities: [])
+        self.userData = userData ?? UserData(uid: "", email: "", name: "", lastName: "", middleName: "", photoData: Data(), likedActivities: [], bookedActivities: [])
         super.init(nibName: nil, bundle: nil)
     }
     

@@ -28,7 +28,8 @@ class ActivityCardVC: UIViewController {
     let companyName = UILabel()
 
     let activity: AppActivity
-    var companyInfo: Company?
+    var company: Company?
+    let userData: UserData
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,8 +44,9 @@ class ActivityCardVC: UIViewController {
         navigationController?.setNavigationBarHidden(false, animated: false)
     }
     
-    init(activity: AppActivity) {
+    init(activity: AppActivity, userData: UserData) {
         self.activity = activity
+        self.userData = userData
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -68,6 +70,7 @@ class ActivityCardVC: UIViewController {
             let company = try await DatabaseManager.shared.fetchCompanyWithName(for: activity.companyName)
             let companyPhotoData = try await StorageManager.shared.fetchCompanyPhoto(for: company[0].phoneNumber)
             
+            self.company = company[0]
             companyName.text = company[0].name
             companyPhoto.image = UIImage(data: companyPhotoData)
             price.text = String(activity.price) + " ₽"
@@ -179,7 +182,8 @@ class ActivityCardVC: UIViewController {
     }
     
     @objc func buttonPressed() {
-        
+        let destVC = BookingVC(activity: activity, userData: userData, company: company!)
+        navigationController?.pushViewController(destVC, animated: true)
     }
     
     @objc func kek() {

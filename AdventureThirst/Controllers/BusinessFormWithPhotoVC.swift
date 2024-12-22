@@ -162,11 +162,11 @@ class BusinessFormWithPhotoVC: UIViewController {
         Task {
             do {
                 let sesseion = try await AuthenticationManager.shared.getCurrentSession()
-                try await DatabaseManager.shared.createCompany(item: CompanyPayLoad(name: orgName, description: descriptionTextField.text, address: orgAdress, activities: [], phoneNumber: orgPhoneNumber, openHours: orgWorkingHours, userUid: sesseion.uid))
+                try await DatabaseManager.shared.createCompany(item: CompanyPayLoad(name: orgName, description: descriptionTextField.text, address: orgAdress, activities: [], phoneNumber: orgPhoneNumber, openHours: orgWorkingHours, userUid: sesseion.uid, bookedActivities: []))
                 
                 let photo = photoView.image
                 guard let photoData = photo?.jpegData(compressionQuality: 0.5) else { return }
-                let company = AppCompany(name: orgName, description: descriptionTextField.text, photo: photoData, address: orgAdress, activities: [], phoneNumber: orgPhoneNumber, openHours: orgWorkingHours, userUid: sesseion.uid)
+                let company = AppCompany(name: orgName, description: descriptionTextField.text, photo: photoData, address: orgAdress, activities: [], phoneNumber: orgPhoneNumber, openHours: orgWorkingHours, userUid: sesseion.uid, bookedActivities: [])
                 
                 delegate?.didRegisterCompany(company: company)
                 navigationController?.pushViewController(BusinessTabBarController(company: company), animated: true)

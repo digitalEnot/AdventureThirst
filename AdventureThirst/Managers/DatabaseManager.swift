@@ -106,5 +106,56 @@ class DatabaseManager {
             throw error
         }
     }
+    
+    
+    
+    
+    
+    
+    
+    func createBookedActivity(item: BookedActivityPayLoad) async throws {
+        let _ = try await client.from("booked_activity").insert(item).execute()
+    }
+    
+    func fetchBookedActivity(for uid: String) async throws -> [BookedActivity] {
+        let response = try await client.from("booked_activity").select().equals("uid", value: uid).execute()
+        let data = response.data
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        do {
+            let bookedActivity = try decoder.decode([BookedActivity].self, from: data)
+            return bookedActivity
+        } catch{
+            throw error
+        }
+    }
+    
+    func updateBookedActivities(bookedActivities: [String], for uid: String) async throws {
+        let _ = try await client.from("personall").update(["booked_activities" : bookedActivities]).eq("user_uid", value: uid).execute()
+    }
+    
+    
+    
+    
+    func createBookedActivityForBusiness(item: BookedActivityForBusinessPayLoad) async throws {
+        let _ = try await client.from("booked_activity_for_business").insert(item).execute()
+    }
+    
+    func fetchBookedActivityForBusiness(for uid: String) async throws -> [BookedActivityForBusiness] {
+        let response = try await client.from("booked_activity_for_business").select().equals("uid", value: uid).execute()
+        let data = response.data
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        do {
+            let bookedActivityForBusiness = try decoder.decode([BookedActivityForBusiness].self, from: data)
+            return bookedActivityForBusiness
+        } catch{
+            throw error
+        }
+    }
+    
+    func updateBookedActivityForBusiness(bookedActivityForBusiness: [String], for name: String) async throws {
+        let _ = try await client.from("company").update(["booked_activities" : bookedActivityForBusiness]).eq("name", value: name).execute()
+    }
 }
 

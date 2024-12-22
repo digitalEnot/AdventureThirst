@@ -137,7 +137,8 @@ class LogInVC: UIViewController {
                     lastName: userPersonalInfo[0].lastName,
                     middleName: userPersonalInfo[0].middleName,
                     photoData: userPhoto,
-                    likedActivities: userPersonalInfo[0].likedActivities
+                    likedActivities: userPersonalInfo[0].likedActivities,
+                    bookedActivities: userPersonalInfo[0].bookedActivities
                 )
                 
                 let companies = try await DatabaseManager.shared.fetchCompany(for: user.uid)
@@ -171,7 +172,8 @@ class LogInVC: UIViewController {
                     activities: company.activities,
                     phoneNumber: company.phoneNumber,
                     openHours: company.openHours,
-                    userUid: company.userUid
+                    userUid: company.userUid,
+                    bookedActivities: company.bookedActivities
                 )
                 appCompanies.append(appCompany)
             } catch {

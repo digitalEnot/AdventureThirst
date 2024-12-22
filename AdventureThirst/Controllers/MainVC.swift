@@ -103,6 +103,7 @@ class MainVC: UIViewController {
         imageForFilters.image = UIImage(systemName: "slider.horizontal.3")
         imageForFilters.tintColor = .black
         search.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
+        search.delegate = self
         
         let gesture = UITapGestureRecognizer(target: self, action: #selector(filterTapped))
         filters.addGestureRecognizer(gesture)
@@ -293,7 +294,7 @@ extension MainVC: UICollectionViewDelegate, UICollectionViewDataSource {
             //
             
             let activity = filteredActivities[indexPath.item]
-            let destVC = ActivityCardVC(activity: activity)
+            let destVC = ActivityCardVC(activity: activity, userData: userData)
             destVC.hidesBottomBarWhenPushed = true
             navigationController?.pushViewController(destVC, animated: true)
         }
@@ -336,5 +337,14 @@ extension MainVC: ActivityCellDelegate {
             }
         }
         
+    }
+}
+
+
+
+extension MainVC: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 }

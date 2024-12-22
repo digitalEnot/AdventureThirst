@@ -104,5 +104,5 @@ class SettingsHeaderView: UIView {
 
 
 #Preview() {
-    SettingsVC(userData: UserData(uid: "", email: "", name: "", lastName: "", middleName: "", photoData: Data(), likedActivities: []), companies: [])
+    SettingsVC(userData: UserData(uid: "", email: "", name: "", lastName: "", middleName: "", photoData: Data(), likedActivities: [], bookedActivities: []), companies: [])
 }

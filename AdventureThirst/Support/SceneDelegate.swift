@@ -62,7 +62,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                             activities: company.activities,
                             phoneNumber: company.phoneNumber,
                             openHours: company.openHours,
-                            userUid: company.userUid
+                            userUid: company.userUid,
+                            bookedActivities: company.bookedActivities
                         )
                         appCompanies.append(appCompany)
                     }
@@ -75,7 +76,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                         lastName: personalInfo[0].lastName,
                         middleName: personalInfo[0].middleName,
                         photoData: profilePhotoData,
-                        likedActivities: personalInfo[0].likedActivities
+                        likedActivities: personalInfo[0].likedActivities,
+                        bookedActivities: personalInfo[0].bookedActivities
                     )
                     navCont.pushViewController(ATTabBarController(userData: userData, appCompanies: appCompanies), animated: false)
                     window?.rootViewController = navCont

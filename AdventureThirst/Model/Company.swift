@@ -16,6 +16,7 @@ struct AppCompany: Codable {
     let phoneNumber: String
     let openHours: String
     let userUid: String
+    let bookedActivities: [String]
 }
 
 struct Company: Codable {
@@ -27,6 +28,7 @@ struct Company: Codable {
     let phoneNumber: String
     let openHours: String
     let userUid: String
+    let bookedActivities: [String]
 }
 
 struct CompanyPayLoad: Codable {
@@ -37,6 +39,7 @@ struct CompanyPayLoad: Codable {
     let phoneNumber: String
     let openHours: String
     let userUid: String
+    let bookedActivities: [String]
     
     enum CodingKeys: String, CodingKey {
         case name
@@ -46,5 +49,6 @@ struct CompanyPayLoad: Codable {
         case phoneNumber = "phone_number"
         case openHours = "open_hours"
         case userUid = "user_uid"
+        case bookedActivities = "booked_activities"
     }
 }

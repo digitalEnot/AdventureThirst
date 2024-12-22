@@ -281,5 +281,5 @@ extension SettingsVC: CompanyRegistrationDelegate {
 
 
 #Preview() {
-    SettingsVC(userData: UserData(uid: "1", email: "", name: "", lastName: "", middleName: "", photoData: Data(), likedActivities: []), companies: [])
+    SettingsVC(userData: UserData(uid: "1", email: "", name: "", lastName: "", middleName: "", photoData: Data(), likedActivities: [], bookedActivities: []), companies: [])
 }

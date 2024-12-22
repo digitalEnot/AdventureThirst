@@ -184,12 +184,12 @@ class PersonalInfoVC: UIViewController {
         Task {
             do {
                 let sesseion = try await AuthenticationManager.shared.getCurrentSession()
-                try await DatabaseManager.shared.createToDoItem(item: PersonalInfoPayload(name: nameTextField.text!, lastName: lastnameTextField.text!, middleName: middlenamePasswordTextField.text ?? "", userUid: sesseion.uid, likedActivities: []))
+                try await DatabaseManager.shared.createToDoItem(item: PersonalInfoPayload(name: nameTextField.text!, lastName: lastnameTextField.text!, middleName: middlenamePasswordTextField.text ?? "", userUid: sesseion.uid, likedActivities: [], bookedActivities: []))
                 
                 let photo = photoView.image
                 let photoData = photo?.jpegData(compressionQuality: 0.5)
                 guard let photoData = photoData else { return }
-                let userData = UserData(uid: sesseion.uid, email: sesseion.email ?? "", name: nameTextField.text!, lastName: lastnameTextField.text!, middleName: middlenamePasswordTextField.text!, photoData: photoData, likedActivities: [])
+                let userData = UserData(uid: sesseion.uid, email: sesseion.email ?? "", name: nameTextField.text!, lastName: lastnameTextField.text!, middleName: middlenamePasswordTextField.text!, photoData: photoData, likedActivities: [], bookedActivities: [])
                 
                 if isModal {
                     delegate?.didLogInToTheSystem(userData: userData, companies: [])
