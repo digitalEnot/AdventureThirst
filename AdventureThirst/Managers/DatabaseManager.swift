@@ -93,5 +93,18 @@ class DatabaseManager {
             throw error
         }
     }
+    
+    func fetchCompanyWithName(for name: String) async throws -> [Company] {
+        let response = try await client.from("company").select().equals("name", value: name).execute()
+        let data = response.data
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        do {
+            let company = try decoder.decode([Company].self, from: data)
+            return company
+        } catch{
+            throw error
+        }
+    }
 }
 

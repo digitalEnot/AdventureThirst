@@ -69,13 +69,13 @@ class MainVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.backButtonTitle = ""
         fetchActivities()
         configureCategoriesCollectionView()
         configureCollectionView()
         configureDataSourse()
         configure()
         configureConstants()
-//        ActivityCell.delegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
