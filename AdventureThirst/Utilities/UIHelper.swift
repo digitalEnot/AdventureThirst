@@ -62,4 +62,16 @@ struct UIHelper {
         
         return flowLayout
     }
+    
+    static func createOneRectangleColumnLayout(in view:  UIView) -> UICollectionViewFlowLayout {
+        let width = view.bounds.width
+        let padding: CGFloat = 5
+        let itemWidth = width - (padding * 2)
+        
+        let flowLayout = UICollectionViewFlowLayout()
+        flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 25, bottom: 0, right: padding)
+        flowLayout.itemSize = CGSize(width: itemWidth, height: 160)
+        
+        return flowLayout
+    }
 }

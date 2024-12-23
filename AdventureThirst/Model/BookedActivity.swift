@@ -8,13 +8,13 @@
 import Foundation
 
 
-struct BookedActivity: Codable {
+struct BookedActivity: Codable, Hashable {
     let id: Int
     let uid: String
     let activityPhoto: String
     let activityName: String
     let activityPrice: Int
-    let activityLocation: Int
+    let activityLocation: String
     let date: String
     let time: String
 }

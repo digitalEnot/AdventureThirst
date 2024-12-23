@@ -15,7 +15,8 @@ class BusinessSettigsVC: UIViewController {
     let company: AppCompany
     let sectionTitles = ["Информация", ""]
     let buttonsInInfoSection: [ButtonView] = [
-        ButtonView(image: UIImage(systemName: "person.text.rectangle"), text: "Информация о компании", nextVC: nil)
+        ButtonView(image: UIImage(systemName: "person.text.rectangle"), text: "Информация о компании", nextVC: nil),
+        ButtonView(image: UIImage(systemName: "figure.badminton.circle"), text: "Записи", nextVC: nil)
     ]
     
     private let settingsTable: UITableView = {
@@ -67,7 +68,11 @@ extension BusinessSettigsVC: UITableViewDelegate, UITableViewDataSource {
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        1
+        if section == 0 {
+            buttonsInInfoSection.count
+        } else {
+            1
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -87,9 +92,15 @@ extension BusinessSettigsVC: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.section == 0 {
-            guard let path = buttonsInInfoSection[indexPath.row].nextVC else { return }
-            navigationController?.pushViewController(path, animated: true)
+            if indexPath.row == 0 {
+//                let destVC = BookedActivitiesVC(userData: userData!)
+//                navigationController?.pushViewController(destVC, animated: true)
+            } else if indexPath.row == 1 {
+                let destVC = BookedActivityForBusinessVC(company: company)
+                navigationController?.pushViewController(destVC, animated: true)
+            }
         } else {
             delegate?.popVC()
         }

@@ -23,7 +23,7 @@ class MainVC: UIViewController {
     var searchedActivities: [AppActivity] = []
     var isSearching = false
     var filteredActivities: [AppActivity] = []
-    var dataSourse: UICollectionViewDiffableDataSource<Section, AppActivity>!
+    var dataSourse: UICollectionViewDiffableDataSource<SecondSection, AppActivity>!
     var collectionView: UICollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout())
     
     let search = SearchBar(textInPlaceholder: "Поиск приключений")
@@ -163,7 +163,7 @@ class MainVC: UIViewController {
     
     
     private func configureDataSourse() {
-        dataSourse = UICollectionViewDiffableDataSource<Section, AppActivity>(collectionView: collectionView, cellProvider: { [weak self] collectionView, indexPath, activity in
+        dataSourse = UICollectionViewDiffableDataSource<SecondSection, AppActivity>(collectionView: collectionView, cellProvider: { [weak self] collectionView, indexPath, activity in
             guard let self = self else { return UICollectionViewCell() }
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ActivityCell.reuseID, for: indexPath) as! ActivityCell
             cell.set(activity: activity)
@@ -188,7 +188,7 @@ class MainVC: UIViewController {
         }
         filteredActivities = applyFilters(activities: filteredActivities, filterOption: selectedFilterOption)
         
-        var snapshot = NSDiffableDataSourceSnapshot<Section, AppActivity>()
+        var snapshot = NSDiffableDataSourceSnapshot<SecondSection, AppActivity>()
         snapshot.appendSections([.main])
         snapshot.appendItems(filteredActivities)
         DispatchQueue.main.async {

@@ -183,7 +183,8 @@ extension SettingsVC: UITableViewDelegate, UITableViewDataSource {
             showAddBusinessVC()
         } else if indexPath.section == numOfSec - 2 {
             if indexPath.row == 0 {
-                
+                let destVC = BookedActivitiesVC(userData: userData!)
+                navigationController?.pushViewController(destVC, animated: true)
             } else if indexPath.row == 1 {
                 let destVC = LikedActivitiesVC(userData: userData ?? nil)
                 destVC.delegate = delegate

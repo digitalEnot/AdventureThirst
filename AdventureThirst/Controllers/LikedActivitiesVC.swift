@@ -20,7 +20,7 @@ class LikedActivitiesVC: UIViewController {
     var userData: UserData
     var likedActivities: [AppActivity] = []
     var collectionView: UICollectionView!
-    var dataSourse: UICollectionViewDiffableDataSource<Section, AppActivity>!
+    var dataSourse: UICollectionViewDiffableDataSource<Ssection, AppActivity>!
     
     weak var delegate: hhaha?
     
@@ -74,7 +74,7 @@ class LikedActivitiesVC: UIViewController {
     }
     
     func configureDataSourse() {
-        dataSourse = UICollectionViewDiffableDataSource<Section, AppActivity>(collectionView: collectionView, cellProvider: { collectionView, indexPath, activity in
+        dataSourse = UICollectionViewDiffableDataSource<Ssection, AppActivity>(collectionView: collectionView, cellProvider: { collectionView, indexPath, activity in
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LikedActivitiesCell.reuseID, for: indexPath) as! LikedActivitiesCell
             cell.set(activity: activity)
             cell.isLiked(true)
@@ -85,7 +85,7 @@ class LikedActivitiesVC: UIViewController {
     }
     
     func updateData(on activities: [AppActivity]) {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, AppActivity>()
+        var snapshot = NSDiffableDataSourceSnapshot<Ssection, AppActivity>()
         snapshot.appendSections([.main])
         snapshot.appendItems(activities)
         DispatchQueue.main.async {

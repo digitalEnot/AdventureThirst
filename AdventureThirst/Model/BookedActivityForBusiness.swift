@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct BookedActivityForBusiness: Codable {
+struct BookedActivityForBusiness: Codable, Hashable {
     let id: Int
     let uid: String
     let userPhoto: String
