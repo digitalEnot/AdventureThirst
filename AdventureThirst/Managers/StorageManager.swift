@@ -35,6 +35,10 @@ class StorageManager {
         return try await storage.from("images").download(path:"\(user.uid)/profile_photo.jpg")
     }
     
+    func fetchProfilePhotoWithUid(for uid: String) async throws -> Data {
+        return try await storage.from("images").download(path:"\(uid)/profile_photo.jpg")
+    }
+    
     
     func uploadCompanyPhoto(for companyPhone: String, photoData: Data) async throws {
         do {

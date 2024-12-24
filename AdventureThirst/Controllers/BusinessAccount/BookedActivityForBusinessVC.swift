@@ -55,7 +55,7 @@ class BookedActivityForBusinessVC: UIViewController {
     }
     
     func configureCollectionView() {
-        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: UIHelper.createOneRectangleColumnLayout(in: view))
+        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: UIHelper.createOneRectangleColumnLayoutForBusiness(in: view))
         view.addSubview(collectionView)
         collectionView.delegate = self
         collectionView.backgroundColor = .systemBackground
@@ -65,7 +65,7 @@ class BookedActivityForBusinessVC: UIViewController {
     func configureDataSourse() {
         dataSourse = UICollectionViewDiffableDataSource<BookedActivityForBusinessVCSection, BookedActivityForBusiness>(collectionView: collectionView, cellProvider: { collectionView, indexPath, bookedActivity in
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: BookedActivityForBusinessCell.reuseID, for: indexPath) as! BookedActivityForBusinessCell
-            cell.set(activity: bookedActivity)
+            cell.set(activity: bookedActivity, addBorder: indexPath.row != 0)
             return cell
         })
     }

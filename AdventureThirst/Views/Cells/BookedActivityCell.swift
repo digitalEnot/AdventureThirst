@@ -20,7 +20,6 @@ class BookedActivityCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         configure()
-//        backgroundColor = .gray.withAlphaComponent(0.2)
     }
     
     required init?(coder: NSCoder) {
@@ -41,7 +40,6 @@ class BookedActivityCell: UICollectionViewCell {
             activityPrice.setCustomFontSize(forSubstring: "Цена: ", toSize: 16, defaultSize: 14, toWeight: .bold, defaultWeight: .regular)
             date.setCustomFontSize(forSubstring: "Дата: ", toSize: 16, defaultSize: 14, toWeight: .bold, defaultWeight: .regular)
             time.setCustomFontSize(forSubstring: "Время: ", toSize: 16, defaultSize: 14, toWeight: .bold, defaultWeight: .regular)
-            
         }
     }
     
@@ -78,11 +76,6 @@ class BookedActivityCell: UICollectionViewCell {
         
         layer.cornerRadius = 10
         
-//        layer.shadowColor = UIColor.gray.cgColor
-//        layer.shadowOpacity = 0.7
-//        layer.shadowOffset = CGSize(width: 0, height: 5)
-//        layer.shadowRadius = 10
-        
         NSLayoutConstraint.activate([
 //            activityPhoto.topAnchor.constraint(equalTo: topAnchor, constant: 20),
             activityPhoto.centerYAnchor.constraint(equalTo: centerYAnchor, constant: 5),
@@ -92,15 +85,15 @@ class BookedActivityCell: UICollectionViewCell {
             
             activityName.topAnchor.constraint(equalTo: activityPhoto.topAnchor),
             activityName.leadingAnchor.constraint(equalTo: activityPhoto.trailingAnchor, constant: 15),
-            activityName.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -5),
+            activityName.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15),
             
             activityPrice.topAnchor.constraint(equalTo: activityName.bottomAnchor),
             activityPrice.leadingAnchor.constraint(equalTo: activityName.leadingAnchor),
-            activityPrice.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -5),
+            activityPrice.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15),
             
             activityAdress.topAnchor.constraint(equalTo: activityPrice.bottomAnchor),
             activityAdress.leadingAnchor.constraint(equalTo: activityName.leadingAnchor),
-            activityAdress.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -5),
+            activityAdress.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15),
             
             date.topAnchor.constraint(equalTo: activityAdress.bottomAnchor),
             date.leadingAnchor.constraint(equalTo: activityName.leadingAnchor),

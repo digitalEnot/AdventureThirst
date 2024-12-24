@@ -107,6 +107,7 @@ class CompanyCell: UITableViewCell {
             
             companyName.topAnchor.constraint(equalTo: cellView.topAnchor, constant: spacing),
             companyName.leadingAnchor.constraint(equalTo: photo.trailingAnchor, constant: photoPadding),
+            companyName.trailingAnchor.constraint(equalTo: cellView.trailingAnchor, constant: -10),
             
             address.topAnchor.constraint(equalTo: companyName.bottomAnchor, constant: spacing),
             address.leadingAnchor.constraint(equalTo: photo.trailingAnchor, constant: photoPadding),
